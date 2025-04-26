@@ -22,6 +22,7 @@ class KasController extends SecureController{
 			"jumlah_kas", 
 			"jenis_kas", 
 			"deskripsi", 
+			"username", 
 			"tanggal");
 		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
 		//search table record
@@ -29,10 +30,10 @@ class KasController extends SecureController{
 			$text = trim($request->search); 
 			$search_condition = "(
 				kas.id_kas LIKE ? OR 
-				kas.id_pengurus LIKE ? OR 
 				kas.jumlah_kas LIKE ? OR 
 				kas.jenis_kas LIKE ? OR 
 				kas.deskripsi LIKE ? OR 
+				kas.username LIKE ? OR 
 				kas.tanggal LIKE ? OR 
 				kas.total_kas LIKE ?
 			)";
@@ -78,6 +79,57 @@ class KasController extends SecureController{
 		$this->render_view("kas/list.php", $data); //render the full page
 	}
 	/**
+     * Load csv|json data
+     * @return data
+     */
+	function import_data(){
+		if(!empty($_FILES['file'])){
+			$finfo = pathinfo($_FILES['file']['name']);
+			$ext = strtolower($finfo['extension']);
+			if(!in_array($ext , array('csv','json'))){
+				$this->set_flash_msg("File format not supported", "danger");
+			}
+			else{
+			$file_path = null;
+			$uploader=new Uploader;
+			$config = array('uploadDir' => UPLOAD_FILE_DIR, 'title' => '{{file_name}}{{date}}', 'required' => true, 'extensions' => array('csv','json'), 'filenameprefix' => 'kas_');
+			$upload_data=$uploader->upload($_FILES['file'], $config);
+			if($upload_data['isComplete']){
+				$files = $upload_data['data'];
+				$file_path = $upload_data['data']['files'][0];
+			}
+			if($upload_data['hasErrors']){
+				$this->set_flash_msg($upload_data['errors'], "danger");
+			}
+				if(!empty($file_path)){
+					$request = $this->request;
+					$db = $this->GetModel();
+					$tablename = $this->tablename;
+					if($ext == "csv"){
+						$options = array('table' => $tablename, 'fields' => '', 'delimiter' => ',', 'quote' => '"');
+						$data = $db->loadCsvData($file_path , $options , true);
+					}
+					else{
+						$data = $db->loadJsonData($file_path, $tablename , true);
+					}
+					if($db->getLastError()){
+						$this->set_flash_msg($db->getLastError(), "danger");
+					}
+					else{
+						$this->set_flash_msg("Data imported successfully", "success");
+					}
+				}
+				else{
+					$this->set_flash_msg("Error uploading file", "success");
+				}
+			}
+		}
+		else{
+			$this->set_flash_msg("No file selected for upload", "warning");
+		}
+		$this->redirect("kas");
+	}
+	/**
      * View record detail 
 	 * @param $rec_id (select record by table primary key) 
      * @param $value value (select record by value of field name(rec_id))
@@ -89,11 +141,11 @@ class KasController extends SecureController{
 		$rec_id = $this->rec_id = urldecode($rec_id);
 		$tablename = $this->tablename;
 		$fields = array("id_kas", 
-			"id_pengurus", 
 			"jumlah_kas", 
 			"jenis_kas", 
 			"deskripsi", 
 			"tanggal", 
+			"username", 
 			"total_kas");
 		if($value){
 			$db->where($rec_id, urldecode($value)); //select record based on field name
@@ -132,15 +184,15 @@ class KasController extends SecureController{
 			$tablename = $this->tablename;
 			$request = $this->request;
 			//fillable fields
-			$fields = $this->fields = array("id_pengurus","jumlah_kas","jenis_kas","deskripsi");
+			$fields = $this->fields = array("username","jumlah_kas","jenis_kas","deskripsi");
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
-				'id_pengurus' => 'required',
+				'username' => 'required',
 				'jumlah_kas' => 'required|numeric',
 				'jenis_kas' => 'required',
 			);
 			$this->sanitize_array = array(
-				'id_pengurus' => 'sanitize_string',
+				'username' => 'sanitize_string',
 				'jumlah_kas' => 'sanitize_string',
 				'jenis_kas' => 'sanitize_string',
 				'deskripsi' => 'sanitize_string',
@@ -151,7 +203,7 @@ class KasController extends SecureController{
 				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 				if($rec_id){
 					$this->write_to_log("add", "true");
-					$this->set_flash_msg("Record added successfully", "success");
+					$this->set_flash_msg("Berhasil ditambahkan ✅", "success");
 					return	$this->redirect("kas");
 				}
 				else{
@@ -174,16 +226,14 @@ class KasController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		 //editable fields
-		$fields = $this->fields = array("id_kas","id_pengurus","jumlah_kas","jenis_kas","deskripsi");
+		$fields = $this->fields = array("id_kas","jumlah_kas","jenis_kas","deskripsi");
 		if($formdata){
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
-				'id_pengurus' => 'required',
 				'jumlah_kas' => 'required|numeric',
 				'jenis_kas' => 'required',
 			);
 			$this->sanitize_array = array(
-				'id_pengurus' => 'sanitize_string',
 				'jumlah_kas' => 'sanitize_string',
 				'jenis_kas' => 'sanitize_string',
 				'deskripsi' => 'sanitize_string',
@@ -231,7 +281,7 @@ class KasController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("id_kas","id_pengurus","jumlah_kas","jenis_kas","deskripsi");
+		$fields = $this->fields = array("id_kas","jumlah_kas","jenis_kas","deskripsi");
 		$page_error = null;
 		if($formdata){
 			$postdata = array();
@@ -240,12 +290,10 @@ class KasController extends SecureController{
 			$postdata[$fieldname] = $fieldvalue;
 			$postdata = $this->format_request_data($postdata);
 			$this->rules_array = array(
-				'id_pengurus' => 'required',
 				'jumlah_kas' => 'required|numeric',
 				'jenis_kas' => 'required',
 			);
 			$this->sanitize_array = array(
-				'id_pengurus' => 'sanitize_string',
 				'jumlah_kas' => 'sanitize_string',
 				'jenis_kas' => 'sanitize_string',
 				'deskripsi' => 'sanitize_string',
@@ -298,7 +346,7 @@ class KasController extends SecureController{
 		$bool = $db->delete($tablename);
 		if($bool){
 			$this->write_to_log("delete", "true");
-			$this->set_flash_msg("Record deleted successfully", "success");
+			$this->set_flash_msg("Berhasil dihapus ✅  ", "success");
 		}
 		elseif($db->getLastError()){
 			$page_error = $db->getLastError();

@@ -18,7 +18,7 @@ $redirect_to = $this->redirect_to;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">Edit  Pengumuman</h4>
+                    <h4 class="record-title">Edit Pengumuman</h4>
                 </div>
             </div>
         </div>
@@ -37,11 +37,11 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="judul_pengumuman">Judul Pengumuman <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="username">Ditambahkan oleh </label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                <input id="ctrl-judul_pengumuman"  value="<?php  echo $data['judul_pengumuman']; ?>" type="text" placeholder="Enter Judul Pengumuman"  required="" name="judul_pengumuman"  class="form-control " />
+                                                <input id="ctrl-username"  value="<?php  echo $data['username']; ?>" type="text" placeholder="--USER_NAME--"  readonly name="username"  class="form-control " />
                                                 </div>
                                             </div>
                                         </div>
@@ -49,57 +49,11 @@ $redirect_to = $this->redirect_to;
                                     <div class="form-group ">
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <label class="control-label" for="isi_pengumuman">Isi Pengumuman <span class="text-danger">*</span></label>
+                                                <label class="control-label" for="judul_pengumuman">Judul Pengumuman <span class="text-danger">*</span></label>
                                             </div>
                                             <div class="col-sm-8">
                                                 <div class="">
-                                                    <textarea placeholder="Enter Isi Pengumuman" id="ctrl-isi_pengumuman"  required="" rows="5" name="isi_pengumuman" class=" form-control"><?php  echo $data['isi_pengumuman']; ?></textarea>
-                                                    <!--<div class="invalid-feedback animated bounceIn text-center">Please enter text</div>-->
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group ">
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                <label class="control-label" for="nama_kegiatan">Nama Kegiatan </label>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                <div class="">
-                                                    <select  id="ctrl-nama_kegiatan" name="nama_kegiatan"  placeholder="Select a value ..."    class="custom-select" >
-                                                        <option value="">Select a value ...</option>
-                                                        <?php
-                                                        $rec = $data['nama_kegiatan'];
-                                                        $nama_kegiatan_options = $comp_model -> pengumuman_nama_kegiatan_option_list();
-                                                        if(!empty($nama_kegiatan_options)){
-                                                        foreach($nama_kegiatan_options as $option){
-                                                        $value = (!empty($option['value']) ? $option['value'] : null);
-                                                        $label = (!empty($option['label']) ? $option['label'] : $value);
-                                                        $selected = ( $value == $rec ? 'selected' : null );
-                                                        ?>
-                                                        <option 
-                                                            <?php echo $selected; ?> value="<?php echo $value; ?>"><?php echo $label; ?>
-                                                        </option>
-                                                        <?php
-                                                        }
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group ">
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                <label class="control-label" for="tanggal_pengumuman">Tanggal Pengumuman <span class="text-danger">*</span></label>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                <div class="input-group">
-                                                    <input id="ctrl-tanggal_pengumuman" class="form-control datepicker  datepicker" required="" value="<?php  echo $data['tanggal_pengumuman']; ?>" type="datetime"  name="tanggal_pengumuman" placeholder="Enter Tanggal Pengumuman" data-enable-time="true" data-min-date="" data-max-date="" data-date-format="Y-m-d H:i:S" data-alt-format="Y-m-d H:i:s" data-inline="false" data-no-calendar="false" data-mode="single" /> 
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                                        </div>
+                                                    <input id="ctrl-judul_pengumuman"  value="<?php  echo $data['judul_pengumuman']; ?>" type="text" placeholder="Enter Judul Pengumuman"  required="" name="judul_pengumuman"  class="form-control " />
                                                     </div>
                                                 </div>
                                             </div>
@@ -107,17 +61,30 @@ $redirect_to = $this->redirect_to;
                                         <div class="form-group ">
                                             <div class="row">
                                                 <div class="col-sm-4">
-                                                    <label class="control-label" for="tanggal_kegiatan">Tanggal Kegiatan </label>
+                                                    <label class="control-label" for="isi_pengumuman">Isi Pengumuman <span class="text-danger">*</span></label>
                                                 </div>
                                                 <div class="col-sm-8">
-                                                    <div class="input-group">
-                                                        <select  id="ctrl-tanggal_kegiatan" name="tanggal_kegiatan"  placeholder="Select a value ..."    class="custom-select" >
+                                                    <div class="">
+                                                        <textarea placeholder="Enter Isi Pengumuman" id="ctrl-isi_pengumuman"  required="" rows="5" name="isi_pengumuman" class=" form-control"><?php  echo $data['isi_pengumuman']; ?></textarea>
+                                                        <!--<div class="invalid-feedback animated bounceIn text-center">Please enter text</div>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <label class="control-label" for="nama_kegiatan">Nama Kegiatan </label>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <div class="">
+                                                        <select  id="ctrl-nama_kegiatan" name="nama_kegiatan"  placeholder="Select a value ..."    class="custom-select" >
                                                             <option value="">Select a value ...</option>
                                                             <?php
-                                                            $rec = $data['tanggal_kegiatan'];
-                                                            $tanggal_kegiatan_options = $comp_model -> pengumuman_tanggal_kegiatan_option_list();
-                                                            if(!empty($tanggal_kegiatan_options)){
-                                                            foreach($tanggal_kegiatan_options as $option){
+                                                            $rec = $data['nama_kegiatan'];
+                                                            $nama_kegiatan_options = $comp_model -> pengumuman_nama_kegiatan_option_list();
+                                                            if(!empty($nama_kegiatan_options)){
+                                                            foreach($nama_kegiatan_options as $option){
                                                             $value = (!empty($option['value']) ? $option['value'] : null);
                                                             $label = (!empty($option['label']) ? $option['label'] : $value);
                                                             $selected = ( $value == $rec ? 'selected' : null );
@@ -130,25 +97,37 @@ $redirect_to = $this->redirect_to;
                                                             }
                                                             ?>
                                                         </select>
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <label class="control-label" for="tanggal_pengumuman">Tanggal Pengumuman <span class="text-danger">*</span></label>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group">
+                                                        <input id="ctrl-tanggal_pengumuman" class="form-control datepicker  datepicker"  required="" value="<?php  echo $data['tanggal_pengumuman']; ?>" type="datetime" name="tanggal_pengumuman" placeholder="Enter Tanggal Pengumuman" data-enable-time="false" data-min-date="" data-max-date="" data-date-format="Y-m-d" data-alt-format="Y-m-d" data-inline="false" data-no-calendar="false" data-mode="single" />
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-ajax-status"></div>
-                                    <div class="form-group text-center">
-                                        <button class="btn btn-primary" type="submit">
-                                            Update
-                                            <i class="fa fa-send"></i>
-                                        </button>
-                                    </div>
-                                </form>
+                                        <div class="form-ajax-status"></div>
+                                        <div class="form-group text-center">
+                                            <button class="btn btn-primary" type="submit">
+                                                Update
+                                                <i class="fa fa-send"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>

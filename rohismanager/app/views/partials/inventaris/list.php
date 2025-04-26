@@ -22,25 +22,42 @@ $show_header = $this->show_header;
 $show_footer = $this->show_footer;
 $show_pagination = $this->show_pagination;
 ?>
-<section class="page" id="<?php echo $page_element_id; ?>" data-page-type="list"  data-display-type="table" data-page-url="<?php print_link($current_page); ?>">
+<section class="page ajax-page" id="<?php echo $page_element_id; ?>" data-page-type="list"  data-display-type="table" data-page-url="<?php print_link($current_page); ?>">
     <?php
     if( $show_header == true ){
     ?>
     <div  class="bg-light p-3 mb-3">
-        <div class="container-fluid">
-            <div class="row ">
-                <div class="col ">
-                    <h4 class="record-title">Inventaris</h4>
+        <div class="">
+            <div class="row align-items-center">
+                <div class="col-sm-3 ">
+                    <h2 class="record-title">Inventaris</h2>
                 </div>
                 <div class="col-sm-3 ">
                     <?php if($can_add){ ?>
-                    <a  class="btn btn btn-primary my-1" href="<?php print_link("inventaris/add") ?>">
-                        <i class="fa fa-plus"></i>                              
-                        Add New Inventaris 
-                    </a>
+                    <?php $modal_id = "modal-" . random_str(); ?>
+                    <button data-toggle="modal" data-target="#<?php  echo $modal_id ?>"  class="btn btn btn-primary my-1">
+                        <i class="fa fa-plus"></i>                                  
+                        Tambah Inventaris 
+                    </button>
+                    <div data-backdrop="true" id="<?php  echo $modal_id ?>" class="modal fade"  role="dialog" aria-labelledby="<?php  echo $modal_id ?>" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body p-0 reset-grids">
+                                    <div class=" ">
+                                        <?php  
+                                        $this->render_page("inventaris/add"); 
+                                        ?>
+                                    </div>
+                                </div>
+                                <div style="top: 5px; right:5px; z-index: 999;" class="position-absolute">
+                                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <?php } ?>
                 </div>
-                <div class="col-sm-4 ">
+                <div class="col-sm-3 ">
                     <form  class="search" action="<?php print_link('inventaris'); ?>" method="get">
                         <div class="input-group">
                             <input value="<?php echo get_value('search'); ?>" class="form-control" type="text" name="search"  placeholder="Search" />
@@ -50,7 +67,7 @@ $show_pagination = $this->show_pagination;
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-12 comp-grid">
+                    <div class="col-sm-3 comp-grid">
                         <div class="">
                             <!-- Page bread crumbs components-->
                             <?php
@@ -107,12 +124,133 @@ $show_pagination = $this->show_pagination;
         ?>
         <div  class="">
             <div class="container-fluid">
+                <div class="row justify-content-start">
+                    <div class="col-sm-6 comp-grid">
+                        <div class="card card-body">
+                            <?php 
+                            $chartdata = $comp_model->barchart_();
+                            ?>
+                            <div>
+                                <h4></h4>
+                                <small class="text-muted"></small>
+                            </div>
+                            <hr />
+                            <canvas id="barchart_"></canvas>
+                            <script>
+                                $(function (){
+                                var chartData = {
+                                labels : <?php echo json_encode($chartdata['labels']); ?>,
+                                datasets : [
+                                {
+                                label: 'Barang',
+                                backgroundColor:'rgba(0 , 64 , 128, 0.5)',
+                                type:'bar',
+                                borderWidth:3,
+                                data : <?php echo json_encode($chartdata['datasets'][0]); ?>,
+                                }
+                                ]
+                                }
+                                var ctx = document.getElementById('barchart_');
+                                var chart = new Chart(ctx, {
+                                type:'bar',
+                                data: chartData,
+                                options: {
+                                scaleStartValue: 0,
+                                responsive: true,
+                                scales: {
+                                xAxes: [{
+                                ticks:{display: true},
+                                gridLines:{display: true},
+                                categoryPercentage: 1.0,
+                                barPercentage: 0.8,
+                                scaleLabel: {
+                                display: true,
+                                labelString: ""
+                                },
+                                }],
+                                yAxes: [{
+                                ticks: {
+                                beginAtZero: true,
+                                display: true
+                                },
+                                scaleLabel: {
+                                display: true,
+                                labelString: ""
+                                }
+                                }]
+                                },
+                                }
+                                ,
+                                })});
+                            </script>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 comp-grid">
+                        <div class="card card-body">
+                            <?php 
+                            $chartdata = $comp_model->piechart_();
+                            ?>
+                            <div>
+                                <h4></h4>
+                                <small class="text-muted"></small>
+                            </div>
+                            <hr />
+                            <canvas id="piechart_"></canvas>
+                            <script>
+                                $(function (){
+                                var chartData = {
+                                labels : <?php echo json_encode($chartdata['labels']); ?>,
+                                datasets : [
+                                {
+                                label: 'Barang',
+                                backgroundColor:'rgba(0 , 64 , 128, 0.5)',
+                                borderWidth:3,
+                                data : <?php echo json_encode($chartdata['datasets'][0]); ?>,
+                                }
+                                ]
+                                }
+                                var ctx = document.getElementById('piechart_');
+                                var chart = new Chart(ctx, {
+                                type:'pie',
+                                data: chartData,
+                                options: {
+                                responsive: true,
+                                scales: {
+                                yAxes: [{
+                                ticks:{display: false},
+                                gridLines:{display: false},
+                                scaleLabel: {
+                                display: true,
+                                labelString: ""
+                                }
+                                }],
+                                xAxes: [{
+                                ticks:{display: false},
+                                gridLines:{display: false},
+                                scaleLabel: {
+                                display: true,
+                                labelString: ""
+                                }
+                                }],
+                                },
+                                }
+                                ,
+                                })});
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div  class="my-4">
+            <div class="container-fluid">
                 <div class="row ">
                     <div class="col-md-12 comp-grid">
                         <?php $this :: display_page_errors(); ?>
                         <div  class=" animated fadeIn page-content">
                             <div id="inventaris-list-records">
                                 <div id="page-report-body" class="table-responsive">
+                                    <?php Html::ajaxpage_spinner(); ?>
                                     <table class="table  table-striped table-sm text-left">
                                         <thead class="table-header bg-light">
                                             <tr>
@@ -128,7 +266,8 @@ $show_pagination = $this->show_pagination;
                                                 <th  class="td-nama_barang"> Nama Barang</th>
                                                 <th  class="td-jumlah_barang"> Jumlah Barang</th>
                                                 <th  class="td-status_barang"> Status Barang</th>
-                                                <th  class="td-tanggal_masuk"> Tanggal Masuk</th>
+                                                <th  class="td-username"> Ditambahkan oleh</th>
+                                                <th  class="td-tanggal_masuk"> Tanggal Ditambahkan</th>
                                                 <th class="td-btn"></th>
                                             </tr>
                                         </thead>
@@ -154,7 +293,7 @@ $show_pagination = $this->show_pagination;
                                                     <?php } ?>
                                                     <th class="td-sno"><?php echo $counter; ?></th>
                                                     <td class="td-nama_barang">
-                                                        <span <?php if($can_edit){ ?> data-source='<?php echo json_encode_quote(Menu :: $nama_barang); ?>' 
+                                                        <span <?php if($can_edit){ ?> data-source='<?php print_link('api/json/inventaris_nama_barang_option_list'); ?>' 
                                                             data-value="<?php echo $data['nama_barang']; ?>" 
                                                             data-pk="<?php echo $data['id_barang'] ?>" 
                                                             data-url="<?php print_link("inventaris/editfield/" . urlencode($data['id_barang'])); ?>" 
@@ -170,7 +309,8 @@ $show_pagination = $this->show_pagination;
                                                         </span>
                                                     </td>
                                                     <td class="td-jumlah_barang">
-                                                        <span <?php if($can_edit){ ?> data-value="<?php echo $data['jumlah_barang']; ?>" 
+                                                        <span <?php if($can_edit){ ?> data-min="0" 
+                                                            data-value="<?php echo $data['jumlah_barang']; ?>" 
                                                             data-pk="<?php echo $data['id_barang'] ?>" 
                                                             data-url="<?php print_link("inventaris/editfield/" . urlencode($data['id_barang'])); ?>" 
                                                             data-name="jumlah_barang" 
@@ -200,13 +340,28 @@ $show_pagination = $this->show_pagination;
                                                             <?php echo $data['status_barang']; ?> 
                                                         </span>
                                                     </td>
+                                                    <td class="td-username">
+                                                        <span <?php if($can_edit){ ?> data-value="<?php echo $data['username']; ?>" 
+                                                            data-pk="<?php echo $data['id_barang'] ?>" 
+                                                            data-url="<?php print_link("inventaris/editfield/" . urlencode($data['id_barang'])); ?>" 
+                                                            data-name="username" 
+                                                            data-title="--USER_NAME--" 
+                                                            data-placement="left" 
+                                                            data-toggle="click" 
+                                                            data-type="text" 
+                                                            data-mode="popover" 
+                                                            data-showbuttons="left" 
+                                                            class="is-editable" <?php } ?>>
+                                                            <?php echo $data['username']; ?> 
+                                                        </span>
+                                                    </td>
                                                     <td class="td-tanggal_masuk">
                                                         <span <?php if($can_edit){ ?> data-flatpickr="{altFormat: 'Y-m-d H:i:s', minDate: '', maxDate: ''}" 
                                                             data-value="<?php echo $data['tanggal_masuk']; ?>" 
                                                             data-pk="<?php echo $data['id_barang'] ?>" 
                                                             data-url="<?php print_link("inventaris/editfield/" . urlencode($data['id_barang'])); ?>" 
                                                             data-name="tanggal_masuk" 
-                                                            data-title="Enter Tanggal Masuk" 
+                                                            data-title="Tanggal Ditambahkan" 
                                                             data-placement="left" 
                                                             data-toggle="click" 
                                                             data-type="flatdatetimepicker" 
@@ -218,17 +373,17 @@ $show_pagination = $this->show_pagination;
                                                     </td>
                                                     <th class="td-btn">
                                                         <?php if($can_view){ ?>
-                                                        <a class="btn btn-sm btn-success has-tooltip" title="View Record" href="<?php print_link("inventaris/view/$rec_id"); ?>">
+                                                        <a class="btn btn-sm btn-success has-tooltip page-modal" title="View Record" href="<?php print_link("inventaris/view/$rec_id"); ?>">
                                                             <i class="fa fa-eye"></i> View
                                                         </a>
                                                         <?php } ?>
                                                         <?php if($can_edit){ ?>
-                                                        <a class="btn btn-sm btn-info has-tooltip" title="Edit This Record" href="<?php print_link("inventaris/edit/$rec_id"); ?>">
+                                                        <a class="btn btn-sm btn-info has-tooltip page-modal" title="Edit This Record" href="<?php print_link("inventaris/edit/$rec_id"); ?>">
                                                             <i class="fa fa-edit"></i> Edit
                                                         </a>
                                                         <?php } ?>
                                                         <?php if($can_delete){ ?>
-                                                        <a class="btn btn-sm btn-danger has-tooltip record-delete-btn" title="Delete this record" href="<?php print_link("inventaris/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Are you sure you want to delete this record?" data-display-style="modal">
+                                                        <a class="btn btn-sm btn-danger has-tooltip record-delete-btn" title="Delete this record" href="<?php print_link("inventaris/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Yakin mau dihapus?" data-display-style="modal">
                                                             <i class="fa fa-times"></i>
                                                             Delete
                                                         </a>
@@ -308,6 +463,7 @@ $show_pagination = $this->show_pagination;
                                                                     $pager->limit_count = $this->limit_count;
                                                                     $pager->show_page_number_list = true;
                                                                     $pager->pager_link_range=5;
+                                                                    $pager->ajax_page = true;
                                                                     $pager->render();
                                                                     }
                                                                     ?>

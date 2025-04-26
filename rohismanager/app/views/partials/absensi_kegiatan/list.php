@@ -23,15 +23,27 @@ $show_footer = $this->show_footer;
 $show_pagination = $this->show_pagination;
 ?>
 <section class="page" id="<?php echo $page_element_id; ?>" data-page-type="list"  data-display-type="table" data-page-url="<?php print_link($current_page); ?>">
-    <div  class="border-bottom">
-        <div class="container-fluid">
+    <div  class="py-1">
+        <div class="">
             <div class="row justify-content-center">
-                <div class="col-md-12 comp-grid">
+                <div class="col-sm-12 comp-grid">
                     <div class=""><?php
-                        // Koneksi ke database
-                        $pdo = new PDO('mysql:host=localhost;dbname=kqnxdjgg_rohismanager', 'kqnxdjgg_rootadmin', 'rootadmin123..'); 
+                        require_once 'config.php'; // <<< WAJIB pakai require_once
+                        try {
+                        $pdo = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USERNAME, DB_PASSWORD);
                         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                        // Query untuk mengambil semua kegiatan beserta total absensi per status dan tanggal kegiatan, diurutkan berdasarkan tanggal kegiatan (terbaru di atas)
+                        } catch (PDOException $e) {
+                        die('Database connection failed: ' . $e->getMessage());
+                        }
+                        // Konfigurasi
+                        $items_per_page = 5;
+                        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                        $offset = ($page - 1) * $items_per_page;
+                        // Hitung total kegiatan
+                        $query_total_kegiatan = "SELECT COUNT(*) AS total FROM kegiatan";
+                        $stmt_total_kegiatan = $pdo->query($query_total_kegiatan);
+                        $total_kegiatan = $stmt_total_kegiatan->fetch(PDO::FETCH_ASSOC)['total'];
+                        // Ambil data kegiatan
                         $query_kegiatan = "
                         SELECT 
                         k.id_kegiatan, 
@@ -39,7 +51,6 @@ $show_pagination = $this->show_pagination;
                         DATE_FORMAT(k.tanggal_kegiatan, '%d-%m-%y') AS tanggal_kegiatan,
                         SUM(CASE WHEN a.status = 'Hadir' THEN 1 ELSE 0 END) AS hadir,
                         SUM(CASE WHEN a.status = 'Sakit' THEN 1 ELSE 0 END) AS sakit,
-                        SUM(CASE WHEN a.status = 'Alpha' THEN 1 ELSE 0 END) AS alpha,
                         SUM(CASE WHEN a.status = 'Izin' THEN 1 ELSE 0 END) AS izin
                         FROM 
                         kegiatan k
@@ -49,10 +60,14 @@ $show_pagination = $this->show_pagination;
                         k.id_kegiatan, k.nama_kegiatan, k.tanggal_kegiatan
                         ORDER BY 
                         k.tanggal_kegiatan DESC
+                        LIMIT :limit OFFSET :offset
                         ";
-                        // Execute the query
-                        $stmt_kegiatan = $pdo->query($query_kegiatan);
-                        // Tampilkan tabel dengan total absensi per kegiatan
+                        $stmt_kegiatan = $pdo->prepare($query_kegiatan);
+                        $stmt_kegiatan->bindParam(':limit', $items_per_page, PDO::PARAM_INT);
+                        $stmt_kegiatan->bindParam(':offset', $offset, PDO::PARAM_INT);
+                        $stmt_kegiatan->execute();
+                        $total_pages = ceil($total_kegiatan / $items_per_page);
+                        // Tampilkan tabel
                         echo '<section style="padding: 50px 0; margin-bottom: 20px; background-color: #f4f4f4;">';
                             echo '  <div style="text-align: center; margin-bottom: 30px;">';
                                 echo '    <h1 style="font-size: 2.5em; margin-bottom: 20px; font-family: Arial, sans-serif; color: #072247;">Data Absensi Kegiatan</h1>';
@@ -66,7 +81,6 @@ $show_pagination = $this->show_pagination;
                                                 echo '            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #072247; color: #072247;">Tanggal Kegiatan</th>';
                                                 echo '            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #072247; color: #072247;">Hadir</th>';
                                                 echo '            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #072247; color: #072247;">Sakit</th>';
-                                                echo '            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #072247; color: #072247;">Alpha</th>';
                                                 echo '            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #072247; color: #072247;">Izin</th>';
                                             echo '          </tr>';
                                         echo '        </thead>';
@@ -77,7 +91,6 @@ $show_pagination = $this->show_pagination;
                                                 echo '            <td style="padding: 12px; border-bottom: 1px solid #ddd; color: #333;">' . htmlspecialchars($row['tanggal_kegiatan']) . '</td>';
                                                 echo '            <td style="padding: 12px; border-bottom: 1px solid #ddd; color: #333;">' . $row['hadir'] . '</td>';
                                                 echo '            <td style="padding: 12px; border-bottom: 1px solid #ddd; color: #333;">' . $row['sakit'] . '</td>';
-                                                echo '            <td style="padding: 12px; border-bottom: 1px solid #ddd; color: #333;">' . $row['alpha'] . '</td>';
                                                 echo '            <td style="padding: 12px; border-bottom: 1px solid #ddd; color: #333;">' . $row['izin'] . '</td>';
                                             echo '          </tr>';
                                             }
@@ -85,9 +98,18 @@ $show_pagination = $this->show_pagination;
                                     echo '      </table>';
                                 echo '    </div>';
                             echo '  </div>';
+                            echo '  <div style="text-align: center; margin-top: 20px;">';
+                                // Tombol navigasi
+                                if ($page > 1) {
+                                echo '<a href="?page=' . ($page - 1) . '" style="padding: 10px 20px; background-color: #072247; color: white; text-decoration: none; border-radius: 5px;">&lt; Previous</a>';
+                                }
+                                echo '    <span style="padding: 10px 20px;">Page ' . $page . ' of ' . $total_pages . '</span>';
+                                if ($page < $total_pages) {
+                                echo '<a href="?page=' . ($page + 1) . '" style="padding: 10px 20px; background-color: #072247; color: white; text-decoration: none; border-radius: 5px;">Next &gt;</a>';
+                                }
+                            echo '  </div>';
                         echo '</section>';
-                        ?>
-                    </div>
+                    ?></div>
                 </div>
             </div>
         </div>
@@ -95,18 +117,35 @@ $show_pagination = $this->show_pagination;
     <?php
     if( $show_header == true ){
     ?>
-    <div  class="bg-light p-3 mb-3">
+    <div  class="bg-light p-4 mb-4">
         <div class="container-fluid">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">Absensi Kegiatan</h4>
+                    <h2 class="record-title">Riwayat Absensi</h2>
                 </div>
-                <div class="col-sm-3 ">
+                <div class="col-sm-4 ">
                     <?php if($can_add){ ?>
-                    <a  class="btn btn btn-primary my-1" href="<?php print_link("absensi_kegiatan/add") ?>">
-                        <i class="fa fa-plus"></i>                              
+                    <?php $modal_id = "modal-" . random_str(); ?>
+                    <button data-toggle="modal" data-target="#<?php  echo $modal_id ?>"  class="btn btn btn-primary my-1">
+                        <i class="fa fa-plus"></i>                                  
                         Absen 
-                    </a>
+                    </button>
+                    <div data-backdrop="true" id="<?php  echo $modal_id ?>" class="modal fade"  role="dialog" aria-labelledby="<?php  echo $modal_id ?>" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body p-0 reset-grids">
+                                    <div class=" ">
+                                        <?php  
+                                        $this->render_page("absensi_kegiatan/add"); 
+                                        ?>
+                                    </div>
+                                </div>
+                                <div style="top: 5px; right:5px; z-index: 999;" class="position-absolute">
+                                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <?php } ?>
                 </div>
                 <div class="col-sm-4 ">
@@ -119,7 +158,7 @@ $show_pagination = $this->show_pagination;
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-12 comp-grid">
+                    <div class="col-sm-4 comp-grid">
                         <div class="">
                             <!-- Page bread crumbs components-->
                             <?php
@@ -174,10 +213,10 @@ $show_pagination = $this->show_pagination;
         <?php
         }
         ?>
-        <div  class="">
+        <div  class="my-4">
             <div class="container-fluid">
                 <div class="row ">
-                    <div class="col-md-12 comp-grid">
+                    <div class="col-sm-12 comp-grid">
                         <?php $this :: display_page_errors(); ?>
                         <div  class=" animated fadeIn page-content">
                             <div id="absensi_kegiatan-list-records">
@@ -224,17 +263,16 @@ $show_pagination = $this->show_pagination;
                                                     <?php } ?>
                                                     <th class="td-sno"><?php echo $counter; ?></th>
                                                     <td class="td-username">
-                                                        <span <?php if($can_edit){ ?> data-source='<?php print_link('api/json/absensi_kegiatan_username_option_list'); ?>' 
-                                                            data-value="<?php echo $data['username']; ?>" 
+                                                        <span <?php if($can_edit){ ?> data-value="<?php echo $data['username']; ?>" 
                                                             data-pk="<?php echo $data['id_absensi'] ?>" 
                                                             data-url="<?php print_link("absensi_kegiatan/editfield/" . urlencode($data['id_absensi'])); ?>" 
                                                             data-name="username" 
-                                                            data-title="Select a value ..." 
+                                                            data-title="Enter Username" 
                                                             data-placement="left" 
                                                             data-toggle="click" 
-                                                            data-type="select" 
+                                                            data-type="text" 
                                                             data-mode="popover" 
-                                                            data-showbuttons="left" 
+                                                            data-showbuttons="bottom" 
                                                             class="is-editable" <?php } ?>>
                                                             <?php echo $data['username']; ?> 
                                                         </span>
@@ -250,7 +288,7 @@ $show_pagination = $this->show_pagination;
                                                             data-toggle="click" 
                                                             data-type="select" 
                                                             data-mode="popover" 
-                                                            data-showbuttons="left" 
+                                                            data-showbuttons="bottom" 
                                                             class="is-editable" <?php } ?>>
                                                             <?php echo $data['nama_kegiatan']; ?> 
                                                         </span>
@@ -266,7 +304,7 @@ $show_pagination = $this->show_pagination;
                                                             data-toggle="click" 
                                                             data-type="radiolist" 
                                                             data-mode="popover" 
-                                                            data-showbuttons="left" 
+                                                            data-showbuttons="bottom" 
                                                             class="is-editable" <?php } ?>>
                                                             <?php echo $data['status']; ?> 
                                                         </span>
@@ -280,7 +318,7 @@ $show_pagination = $this->show_pagination;
                                                             data-toggle="click" 
                                                             data-type="textarea" 
                                                             data-mode="popover" 
-                                                            data-showbuttons="left" 
+                                                            data-showbuttons="bottom" 
                                                             class="is-editable" <?php } ?>>
                                                             <?php echo $data['deskripsi']; ?> 
                                                         </span>
@@ -288,17 +326,17 @@ $show_pagination = $this->show_pagination;
                                                     <td class="td-waktu_absen"> <?php echo $data['waktu_absen']; ?></td>
                                                     <th class="td-btn">
                                                         <?php if($can_view){ ?>
-                                                        <a class="btn btn-sm btn-success has-tooltip" title="View Record" href="<?php print_link("absensi_kegiatan/view/$rec_id"); ?>">
+                                                        <a class="btn btn-sm btn-success has-tooltip page-modal" title="View Record" href="<?php print_link("absensi_kegiatan/view/$rec_id"); ?>">
                                                             <i class="fa fa-eye"></i> View
                                                         </a>
                                                         <?php } ?>
                                                         <?php if($can_edit){ ?>
-                                                        <a class="btn btn-sm btn-info has-tooltip" title="Edit This Record" href="<?php print_link("absensi_kegiatan/edit/$rec_id"); ?>">
+                                                        <a class="btn btn-sm btn-info has-tooltip page-modal" title="Edit This Record" href="<?php print_link("absensi_kegiatan/edit/$rec_id"); ?>">
                                                             <i class="fa fa-edit"></i> Edit
                                                         </a>
                                                         <?php } ?>
                                                         <?php if($can_delete){ ?>
-                                                        <a class="btn btn-sm btn-danger has-tooltip record-delete-btn" title="Delete this record" href="<?php print_link("absensi_kegiatan/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Are you sure you want to delete this record?" data-display-style="modal">
+                                                        <a class="btn btn-sm btn-danger has-tooltip record-delete-btn" title="Delete this record" href="<?php print_link("absensi_kegiatan/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Yakin mau dihapus?" data-display-style="modal">
                                                             <i class="fa fa-times"></i>
                                                             Delete
                                                         </a>
@@ -364,6 +402,7 @@ $show_pagination = $this->show_pagination;
                                                                                 </a>
                                                                             </div>
                                                                         </div>
+                                                                        <?php Html :: import_form('absensi_kegiatan/import_data' , "Import Data", 'CSV , JSON'); ?>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col">   

@@ -28,7 +28,7 @@ $show_export_btn = $this->show_export_btn;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">View  Dokumentasi</h4>
+                    <h4 class="record-title">Dokumentasi Detail</h4>
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@ $show_export_btn = $this->show_export_btn;
                                     </tr>
                                     <tr  class="td-foto">
                                         <th class="title"> Foto: </th>
-                                        <td class="value"><?php Html :: page_img($data['foto'],400,400,100); ?></td>
+                                        <td class="value"><?php Html :: page_img($data['foto'],250,250,-1); ?></td>
                                     </tr>
                                     <tr  class="td-deskripsi_dokumen">
                                         <th class="title"> Deskripsi Dokumen: </th>
@@ -92,24 +92,31 @@ $show_export_btn = $this->show_export_btn;
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr  class="td-waktu_upload">
-                                        <th class="title"> Waktu Upload: </th>
+                                    <tr  class="td-link">
+                                        <th class="title"> Link: </th>
                                         <td class="value">
-                                            <span <?php if($can_edit){ ?> data-flatpickr="{altFormat: 'F j, Y - H:i', minDate: '', maxDate: ''}" 
-                                                data-value="<?php echo $data['waktu_upload']; ?>" 
+                                            <span <?php if($can_edit){ ?> data-value="<?php echo $data['link']; ?>" 
                                                 data-pk="<?php echo $data['id_dokumentasi'] ?>" 
                                                 data-url="<?php print_link("dokumentasi/editfield/" . urlencode($data['id_dokumentasi'])); ?>" 
-                                                data-name="waktu_upload" 
-                                                data-title="Enter Waktu Upload" 
+                                                data-name="link" 
+                                                data-title="Tambah Link" 
                                                 data-placement="left" 
                                                 data-toggle="click" 
-                                                data-type="flatdatetimepicker" 
+                                                data-type="text" 
                                                 data-mode="popover" 
                                                 data-showbuttons="left" 
                                                 class="is-editable" <?php } ?>>
-                                                <?php echo $data['waktu_upload']; ?> 
+                                                <?php echo $data['link']; ?> 
                                             </span>
                                         </td>
+                                    </tr>
+                                    <tr  class="td-username">
+                                        <th class="title"> Diupload Oleh: </th>
+                                        <td class="value"> <?php echo $data['username']; ?></td>
+                                    </tr>
+                                    <tr  class="td-waktu_upload">
+                                        <th class="title"> Waktu Upload: </th>
+                                        <td class="value"> <?php echo $data['waktu_upload']; ?></td>
                                     </tr>
                                 </tbody>
                                 <!-- Table Body End -->
@@ -149,7 +156,7 @@ $show_export_btn = $this->show_export_btn;
                                                 </a>
                                                 <?php } ?>
                                                 <?php if($can_delete){ ?>
-                                                <a class="btn btn-sm btn-danger record-delete-btn mx-1"  href="<?php print_link("dokumentasi/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Are you sure you want to delete this record?" data-display-style="modal">
+                                                <a class="btn btn-sm btn-danger record-delete-btn mx-1"  href="<?php print_link("dokumentasi/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Yakin mau dihapus?" data-display-style="modal">
                                                     <i class="fa fa-times"></i> Delete
                                                 </a>
                                                 <?php } ?>

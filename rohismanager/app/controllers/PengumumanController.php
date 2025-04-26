@@ -22,23 +22,22 @@ class PengumumanController extends SecureController{
 			"judul_pengumuman", 
 			"isi_pengumuman", 
 			"nama_kegiatan", 
-			"tanggal_pengumuman", 
-			"tanggal_kegiatan");
+			"username", 
+			"tanggal_pengumuman");
 		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
 		//search table record
 		if(!empty($request->search)){
 			$text = trim($request->search); 
 			$search_condition = "(
 				pengumuman.id_pengumuman LIKE ? OR 
-				pengumuman.id_pengurus LIKE ? OR 
 				pengumuman.judul_pengumuman LIKE ? OR 
 				pengumuman.isi_pengumuman LIKE ? OR 
 				pengumuman.nama_kegiatan LIKE ? OR 
-				pengumuman.tanggal_pengumuman LIKE ? OR 
-				pengumuman.tanggal_kegiatan LIKE ?
+				pengumuman.username LIKE ? OR 
+				pengumuman.tanggal_pengumuman LIKE ?
 			)";
 			$search_params = array(
-				"%$text%","%$text%","%$text%","%$text%","%$text%","%$text%","%$text%"
+				"%$text%","%$text%","%$text%","%$text%","%$text%","%$text%"
 			);
 			//setting search conditions
 			$db->where($search_condition, $search_params);
@@ -55,10 +54,6 @@ class PengumumanController extends SecureController{
 		}
 		if($fieldname){
 			$db->where($fieldname , $fieldvalue); //filter by a single field name
-		}
-		if(!empty($request->pengumuman_tanggal_pengumuman)){
-			$val = $request->pengumuman_tanggal_pengumuman;
-			$db->where("DATE(pengumuman.tanggal_pengumuman)", $val , "=");
 		}
 		$tc = $db->withTotalCount();
 		$records = $db->get($tablename, $pagination, $fields);
@@ -80,7 +75,49 @@ class PengumumanController extends SecureController{
 		$this->view->report_layout = "report_layout.php";
 		$this->view->report_paper_size = "A4";
 		$this->view->report_orientation = "portrait";
-		$this->render_view("pengumuman/list.php", $data); //render the full page
+		$view_name = (is_ajax() ? "pengumuman/ajax-list.php" : "pengumuman/list.php");
+		$this->render_view($view_name, $data);
+	}
+	/**
+     * Load csv|json data
+     * @return data
+     */
+	function import_data(){
+		if(!empty($_FILES['file'])){
+			$finfo = pathinfo($_FILES['file']['name']);
+			$ext = strtolower($finfo['extension']);
+			if(!in_array($ext , array('csv','json'))){
+				$this->set_flash_msg("File format not supported", "danger");
+			}
+			else{
+			$file_path = $_FILES['file']['tmp_name'];
+				if(!empty($file_path)){
+					$request = $this->request;
+					$db = $this->GetModel();
+					$tablename = $this->tablename;
+					if($ext == "csv"){
+						$options = array('table' => $tablename, 'fields' => '', 'delimiter' => ',', 'quote' => '"');
+						$data = $db->loadCsvData($file_path , $options , false);
+					}
+					else{
+						$data = $db->loadJsonData($file_path, $tablename , false);
+					}
+					if($db->getLastError()){
+						$this->set_flash_msg($db->getLastError(), "danger");
+					}
+					else{
+						$this->set_flash_msg("Data imported successfully", "success");
+					}
+				}
+				else{
+					$this->set_flash_msg("Error uploading file", "success");
+				}
+			}
+		}
+		else{
+			$this->set_flash_msg("No file selected for upload", "warning");
+		}
+		$this->redirect("pengumuman");
 	}
 	/**
      * View record detail 
@@ -94,12 +131,11 @@ class PengumumanController extends SecureController{
 		$rec_id = $this->rec_id = urldecode($rec_id);
 		$tablename = $this->tablename;
 		$fields = array("id_pengumuman", 
-			"id_pengurus", 
 			"judul_pengumuman", 
 			"isi_pengumuman", 
 			"nama_kegiatan", 
 			"tanggal_pengumuman", 
-			"tanggal_kegiatan");
+			"username");
 		if($value){
 			$db->where($rec_id, urldecode($value)); //select record based on field name
 		}
@@ -137,7 +173,7 @@ class PengumumanController extends SecureController{
 			$tablename = $this->tablename;
 			$request = $this->request;
 			//fillable fields
-			$fields = $this->fields = array("judul_pengumuman","isi_pengumuman","nama_kegiatan","tanggal_pengumuman","tanggal_kegiatan");
+			$fields = $this->fields = array("username","judul_pengumuman","isi_pengumuman","nama_kegiatan","tanggal_pengumuman");
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
 				'judul_pengumuman' => 'required',
@@ -145,11 +181,11 @@ class PengumumanController extends SecureController{
 				'tanggal_pengumuman' => 'required',
 			);
 			$this->sanitize_array = array(
+				'username' => 'sanitize_string',
 				'judul_pengumuman' => 'sanitize_string',
 				'isi_pengumuman' => 'sanitize_string',
 				'nama_kegiatan' => 'sanitize_string',
 				'tanggal_pengumuman' => 'sanitize_string',
-				'tanggal_kegiatan' => 'sanitize_string',
 			);
 			$this->filter_vals = true; //set whether to remove empty fields
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
@@ -157,7 +193,7 @@ class PengumumanController extends SecureController{
 				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 				if($rec_id){
 					$this->write_to_log("add", "true");
-					$this->set_flash_msg("Record added successfully", "success");
+					$this->set_flash_msg("Berhasil ditambahkan ✅", "success");
 					return	$this->redirect("pengumuman");
 				}
 				else{
@@ -165,7 +201,7 @@ class PengumumanController extends SecureController{
 				}
 			}
 		}
-		$page_title = $this->view->page_title = "Add New Pengumuman";
+		$page_title = $this->view->page_title = "Tambahkan Pengumuman Baru";
 		$this->render_view("pengumuman/add.php");
 	}
 	/**
@@ -180,7 +216,7 @@ class PengumumanController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		 //editable fields
-		$fields = $this->fields = array("id_pengumuman","judul_pengumuman","isi_pengumuman","nama_kegiatan","tanggal_pengumuman","tanggal_kegiatan");
+		$fields = $this->fields = array("id_pengumuman","username","judul_pengumuman","isi_pengumuman","nama_kegiatan","tanggal_pengumuman");
 		if($formdata){
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
@@ -189,11 +225,11 @@ class PengumumanController extends SecureController{
 				'tanggal_pengumuman' => 'required',
 			);
 			$this->sanitize_array = array(
+				'username' => 'sanitize_string',
 				'judul_pengumuman' => 'sanitize_string',
 				'isi_pengumuman' => 'sanitize_string',
 				'nama_kegiatan' => 'sanitize_string',
 				'tanggal_pengumuman' => 'sanitize_string',
-				'tanggal_kegiatan' => 'sanitize_string',
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			if($this->validated()){
@@ -238,7 +274,7 @@ class PengumumanController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("id_pengumuman","judul_pengumuman","isi_pengumuman","nama_kegiatan","tanggal_pengumuman","tanggal_kegiatan");
+		$fields = $this->fields = array("id_pengumuman","username","judul_pengumuman","isi_pengumuman","nama_kegiatan","tanggal_pengumuman");
 		$page_error = null;
 		if($formdata){
 			$postdata = array();
@@ -252,11 +288,11 @@ class PengumumanController extends SecureController{
 				'tanggal_pengumuman' => 'required',
 			);
 			$this->sanitize_array = array(
+				'username' => 'sanitize_string',
 				'judul_pengumuman' => 'sanitize_string',
 				'isi_pengumuman' => 'sanitize_string',
 				'nama_kegiatan' => 'sanitize_string',
 				'tanggal_pengumuman' => 'sanitize_string',
-				'tanggal_kegiatan' => 'sanitize_string',
 			);
 			$this->filter_rules = true; //filter validation rules by excluding fields not in the formdata
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
@@ -306,7 +342,7 @@ class PengumumanController extends SecureController{
 		$bool = $db->delete($tablename);
 		if($bool){
 			$this->write_to_log("delete", "true");
-			$this->set_flash_msg("Record deleted successfully", "success");
+			$this->set_flash_msg("Berhasil dihapus ✅  ", "success");
 		}
 		elseif($db->getLastError()){
 			$page_error = $db->getLastError();

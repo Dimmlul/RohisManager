@@ -26,18 +26,35 @@ $show_pagination = $this->show_pagination;
     <?php
     if( $show_header == true ){
     ?>
-    <div  class="bg-light p-3 mb-3">
+    <div  class="bg-light p-4 mb-4">
         <div class="container-fluid">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">Dokumentasi</h4>
+                    <h2 class="record-title">Dokumentasi</h2>
                 </div>
-                <div class="col-sm-3 ">
+                <div class="col-sm-4 ">
                     <?php if($can_add){ ?>
-                    <a  class="btn btn btn-primary my-1" href="<?php print_link("dokumentasi/add") ?>">
-                        <i class="fa fa-plus"></i>                              
-                        Add New Dokumentasi 
-                    </a>
+                    <?php $modal_id = "modal-" . random_str(); ?>
+                    <button data-toggle="modal" data-target="#<?php  echo $modal_id ?>"  class="btn btn btn-primary my-1">
+                        <i class="fa fa-plus"></i>                                  
+                        Tambah Dokumentasi 
+                    </button>
+                    <div data-backdrop="true" id="<?php  echo $modal_id ?>" class="modal fade"  role="dialog" aria-labelledby="<?php  echo $modal_id ?>" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body p-0 reset-grids">
+                                    <div class=" ">
+                                        <?php  
+                                        $this->render_page("dokumentasi/add"); 
+                                        ?>
+                                    </div>
+                                </div>
+                                <div style="top: 5px; right:5px; z-index: 999;" class="position-absolute">
+                                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <?php } ?>
                 </div>
                 <div class="col-sm-4 ">
@@ -50,7 +67,7 @@ $show_pagination = $this->show_pagination;
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-12 comp-grid">
+                    <div class="col-sm-4 comp-grid">
                         <div class="">
                             <!-- Page bread crumbs components-->
                             <?php
@@ -105,10 +122,10 @@ $show_pagination = $this->show_pagination;
         <?php
         }
         ?>
-        <div  class="">
+        <div  class="my-4">
             <div class="container-fluid">
                 <div class="row ">
-                    <div class="col-md-12 comp-grid">
+                    <div class="col-sm-12 comp-grid">
                         <?php $this :: display_page_errors(); ?>
                         <div  class=" animated fadeIn page-content">
                             <div id="dokumentasi-list-records">
@@ -128,6 +145,8 @@ $show_pagination = $this->show_pagination;
                                                 <th  class="td-nama_kegiatan"> Nama Kegiatan</th>
                                                 <th  class="td-foto"> Foto</th>
                                                 <th  class="td-deskripsi_dokumen"> Deskripsi Dokumen</th>
+                                                <th  class="td-link"> Link</th>
+                                                <th  class="td-username"> Diupload Oleh</th>
                                                 <th  class="td-waktu_upload"> Waktu Upload</th>
                                                 <th class="td-btn"></th>
                                             </tr>
@@ -169,7 +188,7 @@ $show_pagination = $this->show_pagination;
                                                             <?php echo $data['nama_kegiatan']; ?> 
                                                         </span>
                                                     </td>
-                                                    <td class="td-foto"><?php Html :: page_img($data['foto'],100,100,3); ?></td>
+                                                    <td class="td-foto"><?php Html :: page_img($data['foto'],125,125,3); ?></td>
                                                     <td class="td-deskripsi_dokumen">
                                                         <span <?php if($can_edit){ ?> data-pk="<?php echo $data['id_dokumentasi'] ?>" 
                                                             data-url="<?php print_link("dokumentasi/editfield/" . urlencode($data['id_dokumentasi'])); ?>" 
@@ -184,35 +203,36 @@ $show_pagination = $this->show_pagination;
                                                             <?php echo $data['deskripsi_dokumen']; ?> 
                                                         </span>
                                                     </td>
-                                                    <td class="td-waktu_upload">
-                                                        <span <?php if($can_edit){ ?> data-flatpickr="{altFormat: 'F j, Y - H:i', minDate: '', maxDate: ''}" 
-                                                            data-value="<?php echo $data['waktu_upload']; ?>" 
+                                                    <td class="td-link">
+                                                        <span <?php if($can_edit){ ?> data-value="<?php echo $data['link']; ?>" 
                                                             data-pk="<?php echo $data['id_dokumentasi'] ?>" 
                                                             data-url="<?php print_link("dokumentasi/editfield/" . urlencode($data['id_dokumentasi'])); ?>" 
-                                                            data-name="waktu_upload" 
-                                                            data-title="Enter Waktu Upload" 
+                                                            data-name="link" 
+                                                            data-title="Tambah Link" 
                                                             data-placement="left" 
                                                             data-toggle="click" 
-                                                            data-type="flatdatetimepicker" 
+                                                            data-type="text" 
                                                             data-mode="popover" 
                                                             data-showbuttons="left" 
                                                             class="is-editable" <?php } ?>>
-                                                            <?php echo $data['waktu_upload']; ?> 
+                                                            <?php echo $data['link']; ?> 
                                                         </span>
                                                     </td>
+                                                    <td class="td-username"> <?php echo $data['username']; ?></td>
+                                                    <td class="td-waktu_upload"> <?php echo $data['waktu_upload']; ?></td>
                                                     <th class="td-btn">
                                                         <?php if($can_view){ ?>
-                                                        <a class="btn btn-sm btn-success has-tooltip" title="View Record" href="<?php print_link("dokumentasi/view/$rec_id"); ?>">
+                                                        <a class="btn btn-sm btn-success has-tooltip page-modal" title="View Record" href="<?php print_link("dokumentasi/view/$rec_id"); ?>">
                                                             <i class="fa fa-eye"></i> View
                                                         </a>
                                                         <?php } ?>
                                                         <?php if($can_edit){ ?>
-                                                        <a class="btn btn-sm btn-info has-tooltip" title="Edit This Record" href="<?php print_link("dokumentasi/edit/$rec_id"); ?>">
+                                                        <a class="btn btn-sm btn-info has-tooltip page-modal" title="Edit This Record" href="<?php print_link("dokumentasi/edit/$rec_id"); ?>">
                                                             <i class="fa fa-edit"></i> Edit
                                                         </a>
                                                         <?php } ?>
                                                         <?php if($can_delete){ ?>
-                                                        <a class="btn btn-sm btn-danger has-tooltip record-delete-btn" title="Delete this record" href="<?php print_link("dokumentasi/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Are you sure you want to delete this record?" data-display-style="modal">
+                                                        <a class="btn btn-sm btn-danger has-tooltip record-delete-btn" title="Delete this record" href="<?php print_link("dokumentasi/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Yakin mau dihapus?" data-display-style="modal">
                                                             <i class="fa fa-times"></i>
                                                             Delete
                                                         </a>
@@ -278,6 +298,7 @@ $show_pagination = $this->show_pagination;
                                                                                 </a>
                                                                             </div>
                                                                         </div>
+                                                                        <?php Html :: import_form('dokumentasi/import_data' , "Import Data", 'CSV , JSON'); ?>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col">   

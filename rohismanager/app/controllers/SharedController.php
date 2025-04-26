@@ -7,18 +7,6 @@
 class SharedController extends BaseController{
 	
 	/**
-     * absensi_kegiatan_username_option_list Model Action
-     * @return array
-     */
-	function absensi_kegiatan_username_option_list(){
-		$db = $this->GetModel();
-		$sqltext = "SELECT  DISTINCT username AS value,username AS label FROM user ORDER BY username";
-		$queryparams = null;
-		$arr = $db->rawQuery($sqltext, $queryparams);
-		return $arr;
-	}
-
-	/**
      * absensi_kegiatan_nama_kegiatan_option_list Model Action
      * @return array
      */
@@ -31,12 +19,12 @@ class SharedController extends BaseController{
 	}
 
 	/**
-     * inventaris_id_pengurus_option_list Model Action
+     * inventaris_nama_barang_option_list Model Action
      * @return array
      */
-	function inventaris_id_pengurus_option_list(){
+	function inventaris_nama_barang_option_list(){
 		$db = $this->GetModel();
-		$sqltext = "SELECT  DISTINCT id_pengurus AS value,username AS label FROM pengurus ORDER BY id_pengurus";
+		$sqltext = "SELECT  DISTINCT nama_barang AS value,nama_barang AS label FROM barang ORDER BY id_barang";
 		$queryparams = null;
 		$arr = $db->rawQuery($sqltext, $queryparams);
 		return $arr;
@@ -54,30 +42,6 @@ class SharedController extends BaseController{
 	}
 
 	/**
-     * kas_id_pengurus_option_list Model Action
-     * @return array
-     */
-	function kas_id_pengurus_option_list(){
-		$db = $this->GetModel();
-		$sqltext = "SELECT  DISTINCT id_pengurus AS value,username AS label FROM pengurus ORDER BY username";
-		$queryparams = null;
-		$arr = $db->rawQuery($sqltext, $queryparams);
-		return $arr;
-	}
-
-	/**
-     * kegiatan_id_pengurus_option_list Model Action
-     * @return array
-     */
-	function kegiatan_id_pengurus_option_list(){
-		$db = $this->GetModel();
-		$sqltext = "SELECT  DISTINCT id_pengurus AS value,username AS label FROM pengurus ORDER BY id_pengurus";
-		$queryparams = null;
-		$arr = $db->rawQuery($sqltext, $queryparams);
-		return $arr;
-	}
-
-	/**
      * pengumuman_nama_kegiatan_option_list Model Action
      * @return array
      */
@@ -90,22 +54,10 @@ class SharedController extends BaseController{
 	}
 
 	/**
-     * pengumuman_tanggal_kegiatan_option_list Model Action
+     * user_jabatan_option_list Model Action
      * @return array
      */
-	function pengumuman_tanggal_kegiatan_option_list(){
-		$db = $this->GetModel();
-		$sqltext = "SELECT  DISTINCT tanggal_kegiatan AS value,tanggal_kegiatan AS label FROM kegiatan ORDER BY tanggal_kegiatan";
-		$queryparams = null;
-		$arr = $db->rawQuery($sqltext, $queryparams);
-		return $arr;
-	}
-
-	/**
-     * pengurus_jabatan_option_list Model Action
-     * @return array
-     */
-	function pengurus_jabatan_option_list(){
+	function user_jabatan_option_list(){
 		$db = $this->GetModel();
 		$sqltext = "SELECT  DISTINCT nama_jabatan AS value,nama_jabatan AS label FROM jabatan ORDER BY id_jabatan";
 		$queryparams = null;
@@ -159,10 +111,10 @@ class SharedController extends BaseController{
 	}
 
 	/**
-	* piechart_kas Model Action
+	* barchart_ Model Action
 	* @return array
 	*/
-	function piechart_kas(){
+	function barchart_(){
 		
 		$db = $this->GetModel();
 		$chart_data = array(
@@ -171,11 +123,11 @@ class SharedController extends BaseController{
 		);
 		
 		//set query result for dataset 1
-		$sqltext = "SELECT  k.id_kas, k.id_pengurus, k.jumlah_kas, k.jenis_kas, k.deskripsi, k.tanggal, SUM(k.total_kas) AS sum_of_total_kas FROM kas AS k GROUP BY k.jenis_kas";
+		$sqltext = "SELECT  i.nama_barang, i.jumlah_barang FROM inventaris AS i";
 		$queryparams = null;
 		$dataset1 = $db->rawQuery($sqltext, $queryparams);
-		$dataset_data =  array_column($dataset1, 'jumlah_kas');
-		$dataset_labels =  array_column($dataset1, 'jenis_kas');
+		$dataset_data =  array_column($dataset1, 'jumlah_barang');
+		$dataset_labels =  array_column($dataset1, 'nama_barang');
 		$chart_data["labels"] = array_unique(array_merge($chart_data["labels"], $dataset_labels));
 		$chart_data["datasets"][] = $dataset_data;
 
@@ -183,10 +135,10 @@ class SharedController extends BaseController{
 	}
 
 	/**
-	* piechart_inventaris Model Action
+	* piechart_ Model Action
 	* @return array
 	*/
-	function piechart_inventaris(){
+	function piechart_(){
 		
 		$db = $this->GetModel();
 		$chart_data = array(
@@ -195,11 +147,11 @@ class SharedController extends BaseController{
 		);
 		
 		//set query result for dataset 1
-		$sqltext = "SELECT  i.id_barang, i.id_pengurus, i.nama_barang, SUM(i.jumlah_barang) AS sum_of_jumlah_barang, i.status_barang, i.tanggal_masuk FROM inventaris AS i GROUP BY i.nama_barang";
+		$sqltext = "SELECT  COUNT(i.nama_barang) AS count_of_nama_barang, i.status_barang FROM inventaris AS i GROUP BY i.status_barang";
 		$queryparams = null;
 		$dataset1 = $db->rawQuery($sqltext, $queryparams);
-		$dataset_data =  array_column($dataset1, 'sum_of_jumlah_barang');
-		$dataset_labels =  array_column($dataset1, 'nama_barang');
+		$dataset_data =  array_column($dataset1, 'count_of_nama_barang');
+		$dataset_labels =  array_column($dataset1, 'status_barang');
 		$chart_data["labels"] = array_unique(array_merge($chart_data["labels"], $dataset_labels));
 		$chart_data["datasets"][] = $dataset_data;
 

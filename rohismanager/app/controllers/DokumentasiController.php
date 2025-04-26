@@ -22,6 +22,8 @@ class DokumentasiController extends SecureController{
 			"nama_kegiatan", 
 			"foto", 
 			"deskripsi_dokumen", 
+			"link", 
+			"username", 
 			"waktu_upload");
 		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
 		//search table record
@@ -32,10 +34,12 @@ class DokumentasiController extends SecureController{
 				dokumentasi.nama_kegiatan LIKE ? OR 
 				dokumentasi.foto LIKE ? OR 
 				dokumentasi.deskripsi_dokumen LIKE ? OR 
+				dokumentasi.link LIKE ? OR 
+				dokumentasi.username LIKE ? OR 
 				dokumentasi.waktu_upload LIKE ?
 			)";
 			$search_params = array(
-				"%$text%","%$text%","%$text%","%$text%","%$text%"
+				"%$text%","%$text%","%$text%","%$text%","%$text%","%$text%","%$text%"
 			);
 			//setting search conditions
 			$db->where($search_condition, $search_params);
@@ -76,6 +80,57 @@ class DokumentasiController extends SecureController{
 		$this->render_view("dokumentasi/list.php", $data); //render the full page
 	}
 	/**
+     * Load csv|json data
+     * @return data
+     */
+	function import_data(){
+		if(!empty($_FILES['file'])){
+			$finfo = pathinfo($_FILES['file']['name']);
+			$ext = strtolower($finfo['extension']);
+			if(!in_array($ext , array('csv','json'))){
+				$this->set_flash_msg("File format not supported", "danger");
+			}
+			else{
+			$file_path = null;
+			$uploader=new Uploader;
+			$config = array('uploadDir' => UPLOAD_FILE_DIR, 'title' => '{{file_name}}{{date}}', 'required' => true, 'extensions' => array('csv','json'), 'filenameprefix' => 'dokumentasi_');
+			$upload_data=$uploader->upload($_FILES['file'], $config);
+			if($upload_data['isComplete']){
+				$files = $upload_data['data'];
+				$file_path = $upload_data['data']['files'][0];
+			}
+			if($upload_data['hasErrors']){
+				$this->set_flash_msg($upload_data['errors'], "danger");
+			}
+				if(!empty($file_path)){
+					$request = $this->request;
+					$db = $this->GetModel();
+					$tablename = $this->tablename;
+					if($ext == "csv"){
+						$options = array('table' => $tablename, 'fields' => '', 'delimiter' => ',', 'quote' => '"');
+						$data = $db->loadCsvData($file_path , $options , true);
+					}
+					else{
+						$data = $db->loadJsonData($file_path, $tablename , true);
+					}
+					if($db->getLastError()){
+						$this->set_flash_msg($db->getLastError(), "danger");
+					}
+					else{
+						$this->set_flash_msg("Data imported successfully", "success");
+					}
+				}
+				else{
+					$this->set_flash_msg("Error uploading file", "success");
+				}
+			}
+		}
+		else{
+			$this->set_flash_msg("No file selected for upload", "warning");
+		}
+		$this->redirect("dokumentasi");
+	}
+	/**
      * View record detail 
 	 * @param $rec_id (select record by table primary key) 
      * @param $value value (select record by value of field name(rec_id))
@@ -90,6 +145,8 @@ class DokumentasiController extends SecureController{
 			"nama_kegiatan", 
 			"foto", 
 			"deskripsi_dokumen", 
+			"link", 
+			"username", 
 			"waktu_upload");
 		if($value){
 			$db->where($rec_id, urldecode($value)); //select record based on field name
@@ -128,17 +185,21 @@ class DokumentasiController extends SecureController{
 			$tablename = $this->tablename;
 			$request = $this->request;
 			//fillable fields
-			$fields = $this->fields = array("nama_kegiatan","foto","deskripsi_dokumen","waktu_upload");
+			$fields = $this->fields = array("nama_kegiatan","foto","deskripsi_dokumen","link","username","waktu_upload");
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
 				'nama_kegiatan' => 'required',
 				'foto' => 'required',
+				'link' => 'valid_url',
+				'username' => 'required',
 				'waktu_upload' => 'required',
 			);
 			$this->sanitize_array = array(
 				'nama_kegiatan' => 'sanitize_string',
 				'foto' => 'sanitize_string',
 				'deskripsi_dokumen' => 'sanitize_string',
+				'link' => 'sanitize_string',
+				'username' => 'sanitize_string',
 				'waktu_upload' => 'sanitize_string',
 			);
 			$this->filter_vals = true; //set whether to remove empty fields
@@ -152,7 +213,7 @@ class DokumentasiController extends SecureController{
 				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 				if($rec_id){
 					$this->write_to_log("add", "true");
-					$this->set_flash_msg("Record added successfully", "success");
+					$this->set_flash_msg("Berhasil ditambahkan ✅", "success");
 					return	$this->redirect("dokumentasi");
 				}
 				else{
@@ -175,19 +236,19 @@ class DokumentasiController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		 //editable fields
-		$fields = $this->fields = array("id_dokumentasi","nama_kegiatan","foto","deskripsi_dokumen","waktu_upload");
+		$fields = $this->fields = array("id_dokumentasi","nama_kegiatan","foto","deskripsi_dokumen","link");
 		if($formdata){
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
 				'nama_kegiatan' => 'required',
 				'foto' => 'required',
-				'waktu_upload' => 'required',
+				'link' => 'valid_url',
 			);
 			$this->sanitize_array = array(
 				'nama_kegiatan' => 'sanitize_string',
 				'foto' => 'sanitize_string',
 				'deskripsi_dokumen' => 'sanitize_string',
-				'waktu_upload' => 'sanitize_string',
+				'link' => 'sanitize_string',
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			//Check if Duplicate Record Already Exit In The Database
@@ -198,11 +259,27 @@ class DokumentasiController extends SecureController{
 				}
 			} 
 			if($this->validated()){
+				//get files link to be deleted before updating records
+				$file_fields = array('foto'); //list of file fields
+				$db->where("dokumentasi.id_dokumentasi", $rec_id);;
+				$fields_file_paths = $db->getOne($tablename, $file_fields);
 				$db->where("dokumentasi.id_dokumentasi", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);
 				$numRows = $db->getRowCount(); //number of affected rows. 0 = no record field updated
 				if($bool && $numRows){
 					$this->write_to_log("edit", "true");
+					if(!empty($fields_file_paths)){
+						foreach($file_fields as $field){
+							$files = explode(',', $fields_file_paths[$field]); // for list of files separated by comma
+							foreach($files as $file){
+								//delete files which are not among the submited post data
+								if(stripos($modeldata[$field], $file) === false ){
+									$file_dir_path = str_ireplace( SITE_ADDR , "" , $file ) ;
+									@unlink($file_dir_path);
+								}
+							}
+						}
+					}
 					$this->set_flash_msg("Record updated successfully", "success");
 					return $this->redirect("dokumentasi");
 				}
@@ -239,7 +316,7 @@ class DokumentasiController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("id_dokumentasi","nama_kegiatan","foto","deskripsi_dokumen","waktu_upload");
+		$fields = $this->fields = array("id_dokumentasi","nama_kegiatan","foto","deskripsi_dokumen","link");
 		$page_error = null;
 		if($formdata){
 			$postdata = array();
@@ -250,13 +327,13 @@ class DokumentasiController extends SecureController{
 			$this->rules_array = array(
 				'nama_kegiatan' => 'required',
 				'foto' => 'required',
-				'waktu_upload' => 'required',
+				'link' => 'valid_url',
 			);
 			$this->sanitize_array = array(
 				'nama_kegiatan' => 'sanitize_string',
 				'foto' => 'sanitize_string',
 				'deskripsi_dokumen' => 'sanitize_string',
-				'waktu_upload' => 'sanitize_string',
+				'link' => 'sanitize_string',
 			);
 			$this->filter_rules = true; //filter validation rules by excluding fields not in the formdata
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
@@ -309,11 +386,22 @@ class DokumentasiController extends SecureController{
 		$this->rec_id = $rec_id;
 		//form multiple delete, split record id separated by comma into array
 		$arr_rec_id = array_map('trim', explode(",", $rec_id));
+		//list of file fields
+		$file_fields = array('foto'); 
+		foreach( $arr_id as $rec_id ){
+			$db->where("dokumentasi.id_dokumentasi", $arr_rec_id, "in");;
+		}
+		//get files link to be deleted before deleting records
+		$files = $db->get($tablename, null , $file_fields); 
 		$db->where("dokumentasi.id_dokumentasi", $arr_rec_id, "in");
 		$bool = $db->delete($tablename);
 		if($bool){
 			$this->write_to_log("delete", "true");
-			$this->set_flash_msg("Record deleted successfully", "success");
+			//delete files after record has been deleted
+			foreach($file_fields as $field){
+				$this->delete_record_files($files, $field);
+			}
+			$this->set_flash_msg("Berhasil dihapus ✅  ", "success");
 		}
 		elseif($db->getLastError()){
 			$page_error = $db->getLastError();

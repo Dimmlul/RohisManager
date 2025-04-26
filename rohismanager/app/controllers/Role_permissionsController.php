@@ -73,7 +73,8 @@ class Role_permissionsController extends SecureController{
 		$this->view->report_layout = "report_layout.php";
 		$this->view->report_paper_size = "A4";
 		$this->view->report_orientation = "portrait";
-		$this->render_view("role_permissions/list.php", $data); //render the full page
+		$view_name = (is_ajax() ? "role_permissions/ajax-list.php" : "role_permissions/list.php");
+		$this->render_view($view_name, $data);
 	}
 	/**
      * View record detail 
@@ -148,7 +149,7 @@ class Role_permissionsController extends SecureController{
 				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 				if($rec_id){
 					$this->write_to_log("add", "true");
-					$this->set_flash_msg("Record added successfully", "success");
+					$this->set_flash_msg("Berhasil ditambahkan ✅", "success");
 					return	$this->redirect("role_permissions");
 				}
 				else{
@@ -297,7 +298,7 @@ class Role_permissionsController extends SecureController{
 		$bool = $db->delete($tablename);
 		if($bool){
 			$this->write_to_log("delete", "true");
-			$this->set_flash_msg("Record deleted successfully", "success");
+			$this->set_flash_msg("Berhasil dihapus ✅  ", "success");
 		}
 		elseif($db->getLastError()){
 			$page_error = $db->getLastError();

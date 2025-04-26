@@ -18,7 +18,7 @@ $redirect_to = $this->redirect_to;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">Edit  Kegiatan</h4>
+                    <h4 class="record-title">Edit Kegiatan</h4>
                 </div>
             </div>
         </div>
@@ -37,41 +37,11 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="id_pengurus">Id Pengurus <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="username">Ditambahkan oleh <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                <select required=""  id="ctrl-id_pengurus" name="id_pengurus"  placeholder="Select a value ..."    class="custom-select" >
-                                                    <option value="">Select a value ...</option>
-                                                    <?php
-                                                    $rec = $data['id_pengurus'];
-                                                    $id_pengurus_options = $comp_model -> kegiatan_id_pengurus_option_list();
-                                                    if(!empty($id_pengurus_options)){
-                                                    foreach($id_pengurus_options as $option){
-                                                    $value = (!empty($option['value']) ? $option['value'] : null);
-                                                    $label = (!empty($option['label']) ? $option['label'] : $value);
-                                                    $selected = ( $value == $rec ? 'selected' : null );
-                                                    ?>
-                                                    <option 
-                                                        <?php echo $selected; ?> value="<?php echo $value; ?>"><?php echo $label; ?>
-                                                    </option>
-                                                    <?php
-                                                    }
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group ">
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            <label class="control-label" for="nama_kegiatan">Nama Kegiatan <span class="text-danger">*</span></label>
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <div class="">
-                                                <input id="ctrl-nama_kegiatan"  value="<?php  echo $data['nama_kegiatan']; ?>" type="text" placeholder="Enter Nama Kegiatan"  required="" name="nama_kegiatan"  class="form-control " />
+                                                <input id="ctrl-username"  value="<?php  echo $data['username']; ?>" type="text" placeholder="--USER_NAME--"  readonly required="" name="username"  class="form-control " />
                                                 </div>
                                             </div>
                                         </div>
@@ -79,11 +49,11 @@ $redirect_to = $this->redirect_to;
                                     <div class="form-group ">
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <label class="control-label" for="lokasi_kegiatan">Lokasi Kegiatan <span class="text-danger">*</span></label>
+                                                <label class="control-label" for="nama_kegiatan">Nama Kegiatan <span class="text-danger">*</span></label>
                                             </div>
                                             <div class="col-sm-8">
                                                 <div class="">
-                                                    <input id="ctrl-lokasi_kegiatan"  value="<?php  echo $data['lokasi_kegiatan']; ?>" type="text" placeholder="Enter Lokasi Kegiatan"  required="" name="lokasi_kegiatan"  class="form-control " />
+                                                    <input id="ctrl-nama_kegiatan"  value="<?php  echo $data['nama_kegiatan']; ?>" type="text" placeholder="Masukan Nama Kegiatan"  required="" name="nama_kegiatan"  class="form-control " />
                                                     </div>
                                                 </div>
                                             </div>
@@ -91,73 +61,85 @@ $redirect_to = $this->redirect_to;
                                         <div class="form-group ">
                                             <div class="row">
                                                 <div class="col-sm-4">
-                                                    <label class="control-label" for="deskripsi_kegiatan">Deskripsi Kegiatan <span class="text-danger">*</span></label>
+                                                    <label class="control-label" for="lokasi_kegiatan">Lokasi Kegiatan <span class="text-danger">*</span></label>
                                                 </div>
                                                 <div class="col-sm-8">
                                                     <div class="">
-                                                        <textarea placeholder="Enter Deskripsi Kegiatan" id="ctrl-deskripsi_kegiatan"  required="" rows="5" name="deskripsi_kegiatan" class=" form-control"><?php  echo $data['deskripsi_kegiatan']; ?></textarea>
-                                                        <!--<div class="invalid-feedback animated bounceIn text-center">Please enter text</div>-->
+                                                        <input id="ctrl-lokasi_kegiatan"  value="<?php  echo $data['lokasi_kegiatan']; ?>" type="text" placeholder="Enter Lokasi Kegiatan"  required="" name="lokasi_kegiatan"  class="form-control " />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group ">
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <label class="control-label" for="kategori_kegiatan">Kategori Kegiatan <span class="text-danger">*</span></label>
-                                                </div>
-                                                <div class="col-sm-8">
-                                                    <div class="">
-                                                        <select required=""  id="ctrl-kategori_kegiatan" name="kategori_kegiatan"  placeholder="Select a value ..."    class="custom-select" >
-                                                            <option value="">Select a value ...</option>
-                                                            <?php
-                                                            $kategori_kegiatan_options = Menu :: $kategori_kegiatan;
-                                                            $field_value = $data['kategori_kegiatan'];
-                                                            if(!empty($kategori_kegiatan_options)){
-                                                            foreach($kategori_kegiatan_options as $option){
-                                                            $value = $option['value'];
-                                                            $label = $option['label'];
-                                                            $selected = ( $value == $field_value ? 'selected' : null );
-                                                            ?>
-                                                            <option <?php echo $selected ?> value="<?php echo $value ?>">
-                                                                <?php echo $label ?>
-                                                            </option>                                   
-                                                            <?php
-                                                            }
-                                                            }
-                                                            ?>
-                                                        </select>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <label class="control-label" for="deskripsi_kegiatan">Deskripsi Kegiatan <span class="text-danger">*</span></label>
+                                                    </div>
+                                                    <div class="col-sm-8">
+                                                        <div class="">
+                                                            <textarea placeholder="Enter Deskripsi Kegiatan" id="ctrl-deskripsi_kegiatan"  required="" rows="5" name="deskripsi_kegiatan" class=" form-control"><?php  echo $data['deskripsi_kegiatan']; ?></textarea>
+                                                            <!--<div class="invalid-feedback animated bounceIn text-center">Please enter text</div>-->
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group ">
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <label class="control-label" for="tanggal_kegiatan">Tanggal Kegiatan <span class="text-danger">*</span></label>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <label class="control-label" for="kategori_kegiatan">Kategori Kegiatan <span class="text-danger">*</span></label>
+                                                    </div>
+                                                    <div class="col-sm-8">
+                                                        <div class="">
+                                                            <select required=""  id="ctrl-kategori_kegiatan" name="kategori_kegiatan"  placeholder="Select a value ..."    class="custom-select" >
+                                                                <option value="">Select a value ...</option>
+                                                                <?php
+                                                                $kategori_kegiatan_options = Menu :: $kategori_kegiatan;
+                                                                $field_value = $data['kategori_kegiatan'];
+                                                                if(!empty($kategori_kegiatan_options)){
+                                                                foreach($kategori_kegiatan_options as $option){
+                                                                $value = $option['value'];
+                                                                $label = $option['label'];
+                                                                $selected = ( $value == $field_value ? 'selected' : null );
+                                                                ?>
+                                                                <option <?php echo $selected ?> value="<?php echo $value ?>">
+                                                                    <?php echo $label ?>
+                                                                </option>                                   
+                                                                <?php
+                                                                }
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-8">
-                                                    <div class="input-group">
-                                                        <input id="ctrl-tanggal_kegiatan" class="form-control datepicker  datepicker" required="" value="<?php  echo $data['tanggal_kegiatan']; ?>" type="datetime"  name="tanggal_kegiatan" placeholder="Enter Tanggal Kegiatan" data-enable-time="true" data-min-date="" data-max-date="" data-date-format="Y-m-d H:i:S" data-alt-format="Y-m-d H:i:s" data-inline="false" data-no-calendar="false" data-mode="single" /> 
-                                                            <div class="input-group-append">
-                                                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <label class="control-label" for="tanggal_kegiatan">Tanggal Kegiatan <span class="text-danger">*</span></label>
+                                                    </div>
+                                                    <div class="col-sm-8">
+                                                        <div class="input-group">
+                                                            <input id="ctrl-tanggal_kegiatan" class="form-control datepicker  datepicker" required="" value="<?php  echo $data['tanggal_kegiatan']; ?>" type="datetime"  name="tanggal_kegiatan" placeholder="Enter Tanggal Kegiatan" data-enable-time="true" data-min-date="" data-max-date="" data-date-format="Y-m-d H:i:S" data-alt-format="Y-m-d H:i:s" data-inline="false" data-no-calendar="false" data-mode="single" /> 
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-ajax-status"></div>
-                                        <div class="form-group text-center">
-                                            <button class="btn btn-primary" type="submit">
-                                                Update
-                                                <i class="fa fa-send"></i>
-                                            </button>
-                                        </div>
-                                    </form>
+                                            <div class="form-ajax-status"></div>
+                                            <div class="form-group text-center">
+                                                <button class="btn btn-primary" type="submit">
+                                                    Update
+                                                    <i class="fa fa-send"></i>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>

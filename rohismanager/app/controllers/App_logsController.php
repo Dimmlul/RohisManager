@@ -87,7 +87,8 @@ class App_logsController extends SecureController{
 		$this->view->report_layout = "report_layout.php";
 		$this->view->report_paper_size = "A4";
 		$this->view->report_orientation = "portrait";
-		$this->render_view("app_logs/list.php", $data); //render the full page
+		$view_name = (is_ajax() ? "app_logs/ajax-list.php" : "app_logs/list.php");
+		$this->render_view($view_name, $data);
 	}
 	/**
      * View record detail 
@@ -181,7 +182,7 @@ class App_logsController extends SecureController{
 			if($this->validated()){
 				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 				if($rec_id){
-					$this->set_flash_msg("Record added successfully", "success");
+					$this->set_flash_msg("Berhasil ditambahkan ✅", "success");
 					return	$this->redirect("app_logs");
 				}
 				else{
@@ -355,7 +356,7 @@ class App_logsController extends SecureController{
 		$db->where("app_logs.log_id", $arr_rec_id, "in");
 		$bool = $db->delete($tablename);
 		if($bool){
-			$this->set_flash_msg("Record deleted successfully", "success");
+			$this->set_flash_msg("Berhasil dihapus ✅  ", "success");
 		}
 		elseif($db->getLastError()){
 			$page_error = $db->getLastError();

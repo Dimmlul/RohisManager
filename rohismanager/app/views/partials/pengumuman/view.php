@@ -28,7 +28,7 @@ $show_export_btn = $this->show_export_btn;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">View  Pengumuman</h4>
+                    <h4 class="record-title">Pengumuman Detail</h4>
                 </div>
             </div>
         </div>
@@ -52,10 +52,6 @@ $show_export_btn = $this->show_export_btn;
                             <table class="table table-hover table-borderless table-striped">
                                 <!-- Table Body Start -->
                                 <tbody class="page-data" id="page-data-<?php echo $page_element_id; ?>">
-                                    <tr  class="td-id_pengurus">
-                                        <th class="title"> Id Pengurus: </th>
-                                        <td class="value"> <?php echo $data['id_pengurus']; ?></td>
-                                    </tr>
                                     <tr  class="td-judul_pengumuman">
                                         <th class="title"> Judul Pengumuman: </th>
                                         <td class="value">
@@ -113,7 +109,7 @@ $show_export_btn = $this->show_export_btn;
                                     <tr  class="td-tanggal_pengumuman">
                                         <th class="title"> Tanggal Pengumuman: </th>
                                         <td class="value">
-                                            <span <?php if($can_edit){ ?> data-flatpickr="{altFormat: 'Y-m-d H:i:s', minDate: '', maxDate: ''}" 
+                                            <span <?php if($can_edit){ ?> data-flatpickr="{altFormat: 'Y-m-d', enableTime: false, minDate: '', maxDate: ''}" 
                                                 data-value="<?php echo $data['tanggal_pengumuman']; ?>" 
                                                 data-pk="<?php echo $data['id_pengumuman'] ?>" 
                                                 data-url="<?php print_link("pengumuman/editfield/" . urlencode($data['id_pengumuman'])); ?>" 
@@ -129,22 +125,21 @@ $show_export_btn = $this->show_export_btn;
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr  class="td-tanggal_kegiatan">
-                                        <th class="title"> Tanggal Kegiatan: </th>
+                                    <tr  class="td-username">
+                                        <th class="title"> Ditambahkan oleh: </th>
                                         <td class="value">
-                                            <span <?php if($can_edit){ ?> data-source='<?php print_link('api/json/pengumuman_tanggal_kegiatan_option_list'); ?>' 
-                                                data-value="<?php echo $data['tanggal_kegiatan']; ?>" 
+                                            <span <?php if($can_edit){ ?> data-value="<?php echo $data['username']; ?>" 
                                                 data-pk="<?php echo $data['id_pengumuman'] ?>" 
                                                 data-url="<?php print_link("pengumuman/editfield/" . urlencode($data['id_pengumuman'])); ?>" 
-                                                data-name="tanggal_kegiatan" 
-                                                data-title="Select a value ..." 
+                                                data-name="username" 
+                                                data-title="--USER_NAME--" 
                                                 data-placement="left" 
                                                 data-toggle="click" 
-                                                data-type="select" 
+                                                data-type="text" 
                                                 data-mode="popover" 
                                                 data-showbuttons="left" 
                                                 class="is-editable" <?php } ?>>
-                                                <?php echo $data['tanggal_kegiatan']; ?> 
+                                                <?php echo $data['username']; ?> 
                                             </span>
                                         </td>
                                     </tr>
@@ -186,7 +181,7 @@ $show_export_btn = $this->show_export_btn;
                                                 </a>
                                                 <?php } ?>
                                                 <?php if($can_delete){ ?>
-                                                <a class="btn btn-sm btn-danger record-delete-btn mx-1"  href="<?php print_link("pengumuman/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Are you sure you want to delete this record?" data-display-style="modal">
+                                                <a class="btn btn-sm btn-danger record-delete-btn mx-1"  href="<?php print_link("pengumuman/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Yakin mau dihapus?" data-display-style="modal">
                                                     <i class="fa fa-times"></i> Delete
                                                 </a>
                                                 <?php } ?>

@@ -15,7 +15,7 @@ $redirect_to = $this->redirect_to;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">Add New Roles</h4>
+                    <h4 class="record-title">Tambah Roles</h4>
                 </div>
             </div>
         </div>
@@ -34,11 +34,11 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="role_name">Role Name <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="role">Role <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                <input id="ctrl-role_name"  value="<?php  echo $this->set_field_value('role_name',""); ?>" type="text" placeholder="Enter Role Name"  required="" name="role_name"  class="form-control " />
+                                                <input id="ctrl-role"  value="<?php  echo $this->set_field_value('role',""); ?>" type="text" placeholder="Enter Role"  required="" name="role"  class="form-control " />
                                                 </div>
                                             </div>
                                         </div>

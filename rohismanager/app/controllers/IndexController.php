@@ -103,7 +103,7 @@ class IndexController extends BaseController{
 			$request = $this->request;
 			$db = $this->GetModel();
 			$tablename = $this->tablename;
-			$fields = $this->fields = array("username","email","password","photo"); //registration fields
+			$fields = $this->fields = array("username","email","password","photo","account_status","role","jabatan"); //registration fields
 			$postdata = $this->format_request_data($formdata);
 			$cpassword = $postdata['confirm_password'];
 			$password = $postdata['password'];
@@ -114,17 +114,22 @@ class IndexController extends BaseController{
 				'username' => 'required',
 				'email' => 'required|valid_email',
 				'password' => 'required',
+				'role' => 'required',
+				'jabatan' => 'required',
 			);
 			$this->sanitize_array = array(
 				'username' => 'sanitize_string',
 				'email' => 'sanitize_string',
 				'photo' => 'sanitize_string',
+				'role' => 'sanitize_string',
+				'jabatan' => 'sanitize_string',
 			);
 			$this->filter_vals = true; //set whether to remove empty fields
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			$password_text = $modeldata['password'];
 			//update modeldata with the password hash
 			$modeldata['password'] = $this->modeldata['password'] = password_hash($password_text , PASSWORD_DEFAULT);
+			$modeldata['account_status'] = "Pending";
 			//Check if Duplicate Record Already Exit In The Database
 			$db->where("username", $modeldata['username']);
 			if($db->has($tablename)){
@@ -147,7 +152,7 @@ class IndexController extends BaseController{
 				}
 			}
 		}
-		$page_title = $this->view->page_title = "Add New User";
+		$page_title = $this->view->page_title = "Buat User Baru";
 		return $this->render_view("index/register.php");
 	}
 	/**

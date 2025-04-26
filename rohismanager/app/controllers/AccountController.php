@@ -20,11 +20,11 @@ class AccountController extends SecureController{
 		$fields = array("id_user", 
 			"username", 
 			"email", 
-			"password", 
-			"photo");
+			"role", 
+			"jabatan");
 		$user = $db->getOne($tablename , $fields);
 		if(!empty($user)){
-			$page_title = $this->view->page_title = "My Account";
+			$page_title = $this->view->page_title = "Akun Saya";
 			$this->render_view("account/view.php", $user);
 		}
 		else{
@@ -43,7 +43,7 @@ class AccountController extends SecureController{
 		$rec_id = $this->rec_id = USER_ID;
 		$tablename = $this->tablename;
 		 //editable fields
-		$fields = $this->fields = array("id_user","username","email","password","photo");
+		$fields = $this->fields = array("id_user","username","email","password","photo","jabatan");
 		if($formdata){
 			$postdata = $this->format_request_data($formdata);
 			$cpassword = $postdata['confirm_password'];
@@ -55,12 +55,13 @@ class AccountController extends SecureController{
 				'username' => 'required',
 				'email' => 'required|valid_email',
 				'password' => 'required',
-				'photo' => 'required',
+				'jabatan' => 'required',
 			);
 			$this->sanitize_array = array(
 				'username' => 'sanitize_string',
 				'email' => 'sanitize_string',
 				'photo' => 'sanitize_string',
+				'jabatan' => 'sanitize_string',
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			$password_text = $modeldata['password'];
@@ -106,7 +107,7 @@ class AccountController extends SecureController{
 		}
 		$db->where("user.id_user", $rec_id);;
 		$data = $db->getOne($tablename, $fields);
-		$page_title = $this->view->page_title = "My Account";
+		$page_title = $this->view->page_title = "Akun Saya";
 		if(!$data){
 			$this->set_page_error();
 		}

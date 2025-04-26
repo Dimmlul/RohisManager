@@ -28,7 +28,7 @@ $show_export_btn = $this->show_export_btn;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">View  Absensi Kegiatan</h4>
+                    <h4 class="record-title">Absens Detail</h4>
                 </div>
             </div>
         </div>
@@ -74,15 +74,14 @@ $show_export_btn = $this->show_export_btn;
                                     <tr  class="td-username">
                                         <th class="title"> Username: </th>
                                         <td class="value">
-                                            <span <?php if($can_edit){ ?> data-source='<?php print_link('api/json/absensi_kegiatan_username_option_list'); ?>' 
-                                                data-value="<?php echo $data['username']; ?>" 
+                                            <span <?php if($can_edit){ ?> data-value="<?php echo $data['username']; ?>" 
                                                 data-pk="<?php echo $data['id_absensi'] ?>" 
                                                 data-url="<?php print_link("absensi_kegiatan/editfield/" . urlencode($data['id_absensi'])); ?>" 
                                                 data-name="username" 
-                                                data-title="Select a value ..." 
+                                                data-title="Enter Username" 
                                                 data-placement="left" 
                                                 data-toggle="click" 
-                                                data-type="select" 
+                                                data-type="text" 
                                                 data-mode="popover" 
                                                 data-showbuttons="left" 
                                                 class="is-editable" <?php } ?>>
@@ -168,7 +167,7 @@ $show_export_btn = $this->show_export_btn;
                                                 </a>
                                                 <?php } ?>
                                                 <?php if($can_delete){ ?>
-                                                <a class="btn btn-sm btn-danger record-delete-btn mx-1"  href="<?php print_link("absensi_kegiatan/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Are you sure you want to delete this record?" data-display-style="modal">
+                                                <a class="btn btn-sm btn-danger record-delete-btn mx-1"  href="<?php print_link("absensi_kegiatan/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Yakin mau dihapus?" data-display-style="modal">
                                                     <i class="fa fa-times"></i> Delete
                                                 </a>
                                                 <?php } ?>

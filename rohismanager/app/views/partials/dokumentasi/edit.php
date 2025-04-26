@@ -18,7 +18,7 @@ $redirect_to = $this->redirect_to;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">Edit  Dokumentasi</h4>
+                    <h4 class="record-title">Edit Dokumentasi</h4>
                 </div>
             </div>
         </div>
@@ -72,13 +72,13 @@ $redirect_to = $this->redirect_to;
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                <div class="dropzone required" input="#ctrl-foto" fieldname="foto"    data-multiple="true" dropmsg="Choose files or drag and drop files to upload"    btntext="Browse" filesize="1024" maximum="100">
+                                                <div class="dropzone required" input="#ctrl-foto" fieldname="foto"  resizequality="1" resizemethod="contain" data-multiple="true" dropmsg="Pilih dan Upload Foto" resizewidth="100000" resizeheight="100000"  btntext="Browse" extensions=".jpg,.png,.gif,.jpeg" filesize="10240" maximum="500">
                                                     <input name="foto" id="ctrl-foto" required="" class="dropzone-input form-control" value="<?php  echo $data['foto']; ?>" type="text"  />
                                                         <!--<div class="invalid-feedback animated bounceIn text-center">Please a choose file</div>-->
                                                         <div class="dz-file-limit animated bounceIn text-center text-danger"></div>
                                                     </div>
                                                 </div>
-                                                <?php Html :: uploaded_files_list($data['foto'], '#ctrl-foto'); ?>
+                                                <?php Html :: uploaded_files_list($data['foto'], '#ctrl-foto', 'true'); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -98,15 +98,16 @@ $redirect_to = $this->redirect_to;
                                     <div class="form-group ">
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <label class="control-label" for="waktu_upload">Waktu Upload <span class="text-danger">*</span></label>
+                                                <label class="control-label" for="link">Link Eksternal </label>
                                             </div>
                                             <div class="col-sm-8">
                                                 <div class="input-group">
-                                                    <input id="ctrl-waktu_upload" class="form-control datepicker  datepicker" required="" value="<?php  echo $data['waktu_upload']; ?>" type="datetime"  name="waktu_upload" placeholder="Enter Waktu Upload" data-enable-time="true" data-min-date="" data-max-date="" data-date-format="Y-m-d H:i:S" data-alt-format="F j, Y - H:i" data-inline="false" data-no-calendar="false" data-mode="single" /> 
+                                                    <input id="ctrl-link"  value="<?php  echo $data['link']; ?>" type="url" placeholder="Tambah Link"  name="link"  class="form-control " />
                                                         <div class="input-group-append">
-                                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                                            <span class="input-group-text"><i class="fa fa-external-link "></i></span>
                                                         </div>
                                                     </div>
+                                                    <small class="form-text">Google Drive / Youtube link (opsional)</small>
                                                 </div>
                                             </div>
                                         </div>

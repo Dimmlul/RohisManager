@@ -18,7 +18,7 @@ $redirect_to = $this->redirect_to;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">Edit  Absensi Kegiatan</h4>
+                    <h4 class="record-title">Edit  Absen</h4>
                 </div>
             </div>
         </div>
@@ -71,54 +71,7 @@ $redirect_to = $this->redirect_to;
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                <select required=""  id="ctrl-username" name="username"  placeholder="Select a value ..."    class="custom-select" >
-                                                    <option value="">Select a value ...</option>
-                                                    <?php
-                                                    $rec = $data['username'];
-                                                    $username_options = $comp_model -> absensi_kegiatan_username_option_list();
-                                                    if(!empty($username_options)){
-                                                    foreach($username_options as $option){
-                                                    $value = (!empty($option['value']) ? $option['value'] : null);
-                                                    $label = (!empty($option['label']) ? $option['label'] : $value);
-                                                    $selected = ( $value == $rec ? 'selected' : null );
-                                                    ?>
-                                                    <option 
-                                                        <?php echo $selected; ?> value="<?php echo $value; ?>"><?php echo $label; ?>
-                                                    </option>
-                                                    <?php
-                                                    }
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group ">
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            <label class="control-label" for="status">Status <span class="text-danger">*</span></label>
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <div class="">
-                                                <?php
-                                                $status_options = Menu :: $status;
-                                                $field_value = $data['status'];
-                                                if(!empty($status_options)){
-                                                foreach($status_options as $option){
-                                                $value = $option['value'];
-                                                $label = $option['label'];
-                                                //check if value is among checked options
-                                                $checked = $this->check_form_field_checked($field_value, $value);
-                                                ?>
-                                                <label class="custom-control custom-radio custom-control-inline">
-                                                    <input id="ctrl-status" class="custom-control-input" <?php echo $checked ?>  value="<?php echo $value ?>" type="radio" required=""   name="status" />
-                                                        <span class="custom-control-label"><?php echo $label ?></span>
-                                                    </label>
-                                                    <?php
-                                                    }
-                                                    }
-                                                    ?>
+                                                <input id="ctrl-username"  value="<?php  echo $data['username']; ?>" type="text" placeholder="Enter Username"  readonly required="" name="username"  class="form-control " />
                                                 </div>
                                             </div>
                                         </div>
@@ -126,28 +79,57 @@ $redirect_to = $this->redirect_to;
                                     <div class="form-group ">
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <label class="control-label" for="deskripsi">Deskripsi </label>
+                                                <label class="control-label" for="status">Status <span class="text-danger">*</span></label>
                                             </div>
                                             <div class="col-sm-8">
                                                 <div class="">
-                                                    <textarea placeholder="Enter Deskripsi" id="ctrl-deskripsi"  rows="5" name="deskripsi" class=" form-control"><?php  echo $data['deskripsi']; ?></textarea>
-                                                    <!--<div class="invalid-feedback animated bounceIn text-center">Please enter text</div>-->
+                                                    <?php
+                                                    $status_options = Menu :: $status;
+                                                    $field_value = $data['status'];
+                                                    if(!empty($status_options)){
+                                                    foreach($status_options as $option){
+                                                    $value = $option['value'];
+                                                    $label = $option['label'];
+                                                    //check if value is among checked options
+                                                    $checked = $this->check_form_field_checked($field_value, $value);
+                                                    ?>
+                                                    <label class="custom-control custom-radio custom-control-inline">
+                                                        <input id="ctrl-status" class="custom-control-input" <?php echo $checked ?>  value="<?php echo $value ?>" type="radio" required=""   name="status" />
+                                                            <span class="custom-control-label"><?php echo $label ?></span>
+                                                        </label>
+                                                        <?php
+                                                        }
+                                                        }
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <label class="control-label" for="deskripsi">Deskripsi </label>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <div class="">
+                                                        <textarea placeholder="Enter Deskripsi" id="ctrl-deskripsi"  rows="5" name="deskripsi" class=" form-control"><?php  echo $data['deskripsi']; ?></textarea>
+                                                        <!--<div class="invalid-feedback animated bounceIn text-center">Please enter text</div>-->
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-ajax-status"></div>
-                                <div class="form-group text-center">
-                                    <button class="btn btn-primary" type="submit">
-                                        Update
-                                        <i class="fa fa-send"></i>
-                                    </button>
-                                </div>
-                            </form>
+                                    <div class="form-ajax-status"></div>
+                                    <div class="form-group text-center">
+                                        <button class="btn btn-primary" type="submit">
+                                            Update
+                                            <i class="fa fa-send"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>

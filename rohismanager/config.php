@@ -34,8 +34,8 @@ define("FORBIDDEN", 403);
 // Application Files and Directories 
 define("IMG_DIR",  "assets/images/");
 define("FONTS_DIR",  "assets/fonts/");
-define("SITE_FAVICON", IMG_DIR . "__sitefavicon");
-define("SITE_LOGO", IMG_DIR . "__sitelogo");
+define("SITE_FAVICON", IMG_DIR . "favicon.png");
+define("SITE_LOGO", IMG_DIR . "logo.png");
 
 define("CSS_DIR", SITE_ADDR . "assets/css/");
 define("JS_DIR", SITE_ADDR . "assets/js/");
@@ -85,9 +85,9 @@ define("DEFAULT_EMAIL_ACCOUNT_NAME", "");
 
 // Database Configuration Settings
 define("DB_HOST", "localhost");
-define("DB_USERNAME", "root");
-define("DB_PASSWORD", "");
-define("DB_NAME", "rohismanager");
+define("DB_USERNAME", "kqnxdjgg_rootadmin");
+define("DB_PASSWORD", "rootadmin123..");
+define("DB_NAME", "kqnxdjgg_rohismanager");
 define("DB_TYPE", "mysql");
 define("DB_PORT", "");
 define("DB_CHARSET", "utf8");
@@ -100,4 +100,4 @@ define('USER_ID',(isset($_SESSION[APP_ID.'user_data']) ? $_SESSION[APP_ID.'user_
 define('USER_NAME',(isset($_SESSION[APP_ID.'user_data']) ? $_SESSION[APP_ID.'user_data']['username'] : null ));
 define('USER_EMAIL',(isset($_SESSION[APP_ID.'user_data']) ? $_SESSION[APP_ID.'user_data']['email'] : null ));
 define('USER_PHOTO',(isset($_SESSION[APP_ID.'user_data']) ? $_SESSION[APP_ID.'user_data']['photo'] : null ));
-define('USER_ROLE',(isset($_SESSION[APP_ID.'user_data']) ? $_SESSION[APP_ID.'user_data']['user_role_id'] : null ));
+define('USER_ROLE',(isset($_SESSION[APP_ID.'user_data']) ? $_SESSION[APP_ID.'user_data']['role'] : null ));

@@ -28,7 +28,7 @@ $show_export_btn = $this->show_export_btn;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">View  User</h4>
+                    <h4 class="record-title">User Detail</h4>
                 </div>
             </div>
         </div>
@@ -70,9 +70,28 @@ $show_export_btn = $this->show_export_btn;
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr  class="td-photo">
-                                        <th class="title"> Photo: </th>
-                                        <td class="value"><?php Html :: page_img($data['photo'],400,400,1); ?></td>
+                                    <tr  class="td-role">
+                                        <th class="title"> Role: </th>
+                                        <td class="value"> <?php echo $data['role']; ?></td>
+                                    </tr>
+                                    <tr  class="td-jabatan">
+                                        <th class="title"> Jabatan: </th>
+                                        <td class="value">
+                                            <span <?php if($can_edit){ ?> data-source='<?php print_link('api/json/user_jabatan_option_list'); ?>' 
+                                                data-value="<?php echo $data['jabatan']; ?>" 
+                                                data-pk="<?php echo $data['id_user'] ?>" 
+                                                data-url="<?php print_link("user/editfield/" . urlencode($data['id_user'])); ?>" 
+                                                data-name="jabatan" 
+                                                data-title="Select a value ..." 
+                                                data-placement="left" 
+                                                data-toggle="click" 
+                                                data-type="select" 
+                                                data-mode="popover" 
+                                                data-showbuttons="left" 
+                                                class="is-editable" <?php } ?>>
+                                                <?php echo $data['jabatan']; ?> 
+                                            </span>
+                                        </td>
                                     </tr>
                                 </tbody>
                                 <!-- Table Body End -->
@@ -112,7 +131,7 @@ $show_export_btn = $this->show_export_btn;
                                                 </a>
                                                 <?php } ?>
                                                 <?php if($can_delete){ ?>
-                                                <a class="btn btn-sm btn-danger record-delete-btn mx-1"  href="<?php print_link("user/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Are you sure you want to delete this record?" data-display-style="modal">
+                                                <a class="btn btn-sm btn-danger record-delete-btn mx-1"  href="<?php print_link("user/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Yakin mau dihapus?" data-display-style="modal">
                                                     <i class="fa fa-times"></i> Delete
                                                 </a>
                                                 <?php } ?>

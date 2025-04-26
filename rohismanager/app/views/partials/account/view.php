@@ -28,7 +28,7 @@ $show_export_btn = $this->show_export_btn;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">My Account</h4>
+                    <h4 class="record-title">Akun Saya</h4>
                 </div>
             </div>
         </div>
@@ -133,27 +133,28 @@ $show_export_btn = $this->show_export_btn;
                                                             </span>
                                                         </td>
                                                     </tr>
-                                                    <tr  class="td-password">
-                                                        <th class="title"> Password: </th>
+                                                    <tr  class="td-role">
+                                                        <th class="title"> Role: </th>
+                                                        <td class="value"> <?php echo $data['role']; ?></td>
+                                                    </tr>
+                                                    <tr  class="td-jabatan">
+                                                        <th class="title"> Jabatan: </th>
                                                         <td class="value">
-                                                            <span <?php if($can_edit){ ?> data-value="<?php echo $data['password']; ?>" 
+                                                            <span <?php if($can_edit){ ?> data-source='<?php print_link('api/json/account_jabatan_option_list'); ?>' 
+                                                                data-value="<?php echo $data['jabatan']; ?>" 
                                                                 data-pk="<?php echo $data['id_user'] ?>" 
                                                                 data-url="<?php print_link("user/editfield/" . urlencode($data['id_user'])); ?>" 
-                                                                data-name="password" 
-                                                                data-title="Enter Password" 
+                                                                data-name="jabatan" 
+                                                                data-title="Select a value ..." 
                                                                 data-placement="left" 
                                                                 data-toggle="click" 
-                                                                data-type="password" 
+                                                                data-type="select" 
                                                                 data-mode="popover" 
                                                                 data-showbuttons="left" 
                                                                 class="is-editable" <?php } ?>>
-                                                                <?php echo $data['password']; ?> 
+                                                                <?php echo $data['jabatan']; ?> 
                                                             </span>
                                                         </td>
-                                                    </tr>
-                                                    <tr  class="td-photo">
-                                                        <th class="title"> Photo: </th>
-                                                        <td class="value"><?php Html :: page_img($data['photo'],400,400,1); ?></td>
                                                     </tr>
                                                 </tbody>    
                                             </table>

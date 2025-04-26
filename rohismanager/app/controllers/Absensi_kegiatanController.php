@@ -53,6 +53,10 @@ class Absensi_kegiatanController extends SecureController{
 		else{
 			$db->orderBy("absensi_kegiatan.id_absensi", ORDER_TYPE);
 		}
+		$allowed_roles = array ('administrator', 'pengurus');
+		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
+		$db->where("absensi_kegiatan.username", get_active_user('role') );
+		}
 		if($fieldname){
 			$db->where($fieldname , $fieldvalue); //filter by a single field name
 		}
@@ -70,13 +74,64 @@ class Absensi_kegiatanController extends SecureController{
 		if($db->getLastError()){
 			$this->set_page_error();
 		}
-		$page_title = $this->view->page_title = "Absensi Kegiatan";
+		$page_title = $this->view->page_title = "Absensi";
 		$this->view->report_filename = date('Y-m-d') . '-' . $page_title;
 		$this->view->report_title = $page_title;
 		$this->view->report_layout = "report_layout.php";
 		$this->view->report_paper_size = "A4";
 		$this->view->report_orientation = "portrait";
 		$this->render_view("absensi_kegiatan/list.php", $data); //render the full page
+	}
+	/**
+     * Load csv|json data
+     * @return data
+     */
+	function import_data(){
+		if(!empty($_FILES['file'])){
+			$finfo = pathinfo($_FILES['file']['name']);
+			$ext = strtolower($finfo['extension']);
+			if(!in_array($ext , array('csv','json'))){
+				$this->set_flash_msg("File format not supported", "danger");
+			}
+			else{
+			$file_path = null;
+			$uploader=new Uploader;
+			$config = array('uploadDir' => UPLOAD_FILE_DIR, 'title' => '{{file_name}}{{date}}', 'required' => true, 'extensions' => array('csv','json'), 'filenameprefix' => 'absensi_kegiatan_');
+			$upload_data=$uploader->upload($_FILES['file'], $config);
+			if($upload_data['isComplete']){
+				$files = $upload_data['data'];
+				$file_path = $upload_data['data']['files'][0];
+			}
+			if($upload_data['hasErrors']){
+				$this->set_flash_msg($upload_data['errors'], "danger");
+			}
+				if(!empty($file_path)){
+					$request = $this->request;
+					$db = $this->GetModel();
+					$tablename = $this->tablename;
+					if($ext == "csv"){
+						$options = array('table' => $tablename, 'fields' => '', 'delimiter' => ',', 'quote' => '"');
+						$data = $db->loadCsvData($file_path , $options , true);
+					}
+					else{
+						$data = $db->loadJsonData($file_path, $tablename , true);
+					}
+					if($db->getLastError()){
+						$this->set_flash_msg($db->getLastError(), "danger");
+					}
+					else{
+						$this->set_flash_msg("Data imported successfully", "success");
+					}
+				}
+				else{
+					$this->set_flash_msg("Error uploading file", "success");
+				}
+			}
+		}
+		else{
+			$this->set_flash_msg("No file selected for upload", "warning");
+		}
+		$this->redirect("absensi_kegiatan");
 	}
 	/**
      * View record detail 
@@ -95,6 +150,10 @@ class Absensi_kegiatanController extends SecureController{
 			"waktu_absen", 
 			"deskripsi", 
 			"status");
+		$allowed_roles = array ('administrator', 'pengurus');
+		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
+		$db->where("absensi_kegiatan.username", get_active_user('role') );
+		}
 		if($value){
 			$db->where($rec_id, urldecode($value)); //select record based on field name
 		}
@@ -151,7 +210,7 @@ class Absensi_kegiatanController extends SecureController{
 				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 				if($rec_id){
 					$this->write_to_log("add", "true");
-					$this->set_flash_msg("Record added successfully", "success");
+					$this->set_flash_msg("Berhasil ditambahkan ✅", "success");
 					return	$this->redirect("absensi_kegiatan");
 				}
 				else{
@@ -159,7 +218,7 @@ class Absensi_kegiatanController extends SecureController{
 				}
 			}
 		}
-		$page_title = $this->view->page_title = "Add New Absensi Kegiatan";
+		$page_title = $this->view->page_title = "Absensi Kegiatan";
 		$this->render_view("absensi_kegiatan/add.php");
 	}
 	/**
@@ -190,6 +249,10 @@ class Absensi_kegiatanController extends SecureController{
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			if($this->validated()){
+		$allowed_roles = array ('administrator', 'pengurus');
+		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
+		$db->where("absensi_kegiatan.username", get_active_user('role') );
+		}
 				$db->where("absensi_kegiatan.id_absensi", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);
 				$numRows = $db->getRowCount(); //number of affected rows. 0 = no record field updated
@@ -211,6 +274,10 @@ class Absensi_kegiatanController extends SecureController{
 					}
 				}
 			}
+		}
+		$allowed_roles = array ('administrator', 'pengurus');
+		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
+		$db->where("absensi_kegiatan.username", get_active_user('role') );
 		}
 		$db->where("absensi_kegiatan.id_absensi", $rec_id);;
 		$data = $db->getOne($tablename, $fields);
@@ -253,6 +320,10 @@ class Absensi_kegiatanController extends SecureController{
 			$this->filter_rules = true; //filter validation rules by excluding fields not in the formdata
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			if($this->validated()){
+		$allowed_roles = array ('administrator', 'pengurus');
+		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
+		$db->where("absensi_kegiatan.username", get_active_user('role') );
+		}
 				$db->where("absensi_kegiatan.id_absensi", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);
 				$numRows = $db->getRowCount();
@@ -295,10 +366,14 @@ class Absensi_kegiatanController extends SecureController{
 		//form multiple delete, split record id separated by comma into array
 		$arr_rec_id = array_map('trim', explode(",", $rec_id));
 		$db->where("absensi_kegiatan.id_absensi", $arr_rec_id, "in");
+		$allowed_roles = array ('administrator', 'pengurus');
+		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
+		$db->where("absensi_kegiatan.username", get_active_user('role') );
+		}
 		$bool = $db->delete($tablename);
 		if($bool){
 			$this->write_to_log("delete", "true");
-			$this->set_flash_msg("Record deleted successfully", "success");
+			$this->set_flash_msg("Berhasil dihapus ✅  ", "success");
 		}
 		elseif($db->getLastError()){
 			$page_error = $db->getLastError();

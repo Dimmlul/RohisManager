@@ -20,8 +20,7 @@ class PengurusController extends SecureController{
 		$tablename = $this->tablename;
 		$fields = array("id_pengurus", 
 			"username", 
-			"jabatan", 
-			"photo");
+			"jabatan");
 		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
 		//search table record
 		if(!empty($request->search)){
@@ -33,11 +32,10 @@ class PengurusController extends SecureController{
 				pengurus.password LIKE ? OR 
 				pengurus.jabatan LIKE ? OR 
 				pengurus.waktu_gabung LIKE ? OR 
-				pengurus.photo LIKE ? OR 
-				pengurus.user_role_id LIKE ?
+				pengurus.photo LIKE ?
 			)";
 			$search_params = array(
-				"%$text%","%$text%","%$text%","%$text%","%$text%","%$text%","%$text%","%$text%"
+				"%$text%","%$text%","%$text%","%$text%","%$text%","%$text%","%$text%"
 			);
 			//setting search conditions
 			$db->where($search_condition, $search_params);
@@ -76,6 +74,57 @@ class PengurusController extends SecureController{
 		$this->view->report_paper_size = "A4";
 		$this->view->report_orientation = "portrait";
 		$this->render_view("pengurus/list.php", $data); //render the full page
+	}
+	/**
+     * Load csv|json data
+     * @return data
+     */
+	function import_data(){
+		if(!empty($_FILES['file'])){
+			$finfo = pathinfo($_FILES['file']['name']);
+			$ext = strtolower($finfo['extension']);
+			if(!in_array($ext , array('csv','json'))){
+				$this->set_flash_msg("File format not supported", "danger");
+			}
+			else{
+			$file_path = null;
+			$uploader=new Uploader;
+			$config = array('uploadDir' => UPLOAD_FILE_DIR, 'title' => '{{file_name}}{{date}}', 'required' => true, 'extensions' => array('csv','json'), 'filenameprefix' => 'pengurus_');
+			$upload_data=$uploader->upload($_FILES['file'], $config);
+			if($upload_data['isComplete']){
+				$files = $upload_data['data'];
+				$file_path = $upload_data['data']['files'][0];
+			}
+			if($upload_data['hasErrors']){
+				$this->set_flash_msg($upload_data['errors'], "danger");
+			}
+				if(!empty($file_path)){
+					$request = $this->request;
+					$db = $this->GetModel();
+					$tablename = $this->tablename;
+					if($ext == "csv"){
+						$options = array('table' => $tablename, 'fields' => '', 'delimiter' => ',', 'quote' => '"');
+						$data = $db->loadCsvData($file_path , $options , true);
+					}
+					else{
+						$data = $db->loadJsonData($file_path, $tablename , true);
+					}
+					if($db->getLastError()){
+						$this->set_flash_msg($db->getLastError(), "danger");
+					}
+					else{
+						$this->set_flash_msg("Data imported successfully", "success");
+					}
+				}
+				else{
+					$this->set_flash_msg("Error uploading file", "success");
+				}
+			}
+		}
+		else{
+			$this->set_flash_msg("No file selected for upload", "warning");
+		}
+		$this->redirect("pengurus");
 	}
 	/**
      * View record detail 
@@ -129,7 +178,7 @@ class PengurusController extends SecureController{
 			$tablename = $this->tablename;
 			$request = $this->request;
 			//fillable fields
-			$fields = $this->fields = array("username","email","password","jabatan","photo","user_role_id");
+			$fields = $this->fields = array("username","email","password","jabatan","photo");
 			$postdata = $this->format_request_data($formdata);
 			$cpassword = $postdata['confirm_password'];
 			$password = $postdata['password'];
@@ -141,15 +190,12 @@ class PengurusController extends SecureController{
 				'email' => 'required|valid_email',
 				'password' => 'required',
 				'jabatan' => 'required',
-				'photo' => 'required',
-				'user_role_id' => 'required|numeric',
 			);
 			$this->sanitize_array = array(
 				'username' => 'sanitize_string',
 				'email' => 'sanitize_string',
 				'jabatan' => 'sanitize_string',
 				'photo' => 'sanitize_string',
-				'user_role_id' => 'sanitize_string',
 			);
 			$this->filter_vals = true; //set whether to remove empty fields
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
@@ -196,7 +242,6 @@ class PengurusController extends SecureController{
 				'email' => 'required|valid_email',
 				'password' => 'required',
 				'jabatan' => 'required',
-				'photo' => 'required',
 			);
 			$this->sanitize_array = array(
 				'username' => 'sanitize_string',
@@ -263,7 +308,6 @@ class PengurusController extends SecureController{
 				'email' => 'required|valid_email',
 				'password' => 'required',
 				'jabatan' => 'required',
-				'photo' => 'required',
 			);
 			$this->sanitize_array = array(
 				'username' => 'sanitize_string',

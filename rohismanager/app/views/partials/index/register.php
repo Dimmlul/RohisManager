@@ -15,7 +15,7 @@ $redirect_to = $this->redirect_to;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">User registration</h4>
+                    <h4 class="record-title">User Registration</h4>
                 </div>
                 <div class="col-sm-6 comp-grid">
                     <div class="">
@@ -112,11 +112,69 @@ $redirect_to = $this->redirect_to;
                                                     </div>
                                                     <div class="col-sm-8">
                                                         <div class="">
-                                                            <div class="dropzone " input="#ctrl-photo" fieldname="photo"    data-multiple="false" dropmsg="Choose files or drag and drop files to upload"    btntext="Browse" extensions=".jpg,.png,.gif,.jpeg" filesize="100" maximum="1">
+                                                            <div class="dropzone " input="#ctrl-photo" fieldname="photo"    data-multiple="false" dropmsg="Pilih Foto Anda"    btntext="Browse" extensions=".jpg,.png,.gif,.jpeg" filesize="100" maximum="1">
                                                                 <input name="photo" id="ctrl-photo" class="dropzone-input form-control" value="<?php  echo $this->set_field_value('photo',""); ?>" type="text"  />
                                                                     <!--<div class="invalid-feedback animated bounceIn text-center">Please a choose file</div>-->
                                                                     <div class="dz-file-limit animated bounceIn text-center text-danger"></div>
                                                                 </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group ">
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <label class="control-label" for="role">Role <span class="text-danger">*</span></label>
+                                                        </div>
+                                                        <div class="col-sm-8">
+                                                            <div class="">
+                                                                <select required=""  id="ctrl-role" name="role"  placeholder="Select a value ..."    class="custom-select" >
+                                                                    <option value="">Select a value ...</option>
+                                                                    <?php
+                                                                    $role_options = Menu :: $role;
+                                                                    if(!empty($role_options)){
+                                                                    foreach($role_options as $option){
+                                                                    $value = $option['value'];
+                                                                    $label = $option['label'];
+                                                                    $selected = $this->set_field_selected('role', $value, "User");
+                                                                    ?>
+                                                                    <option <?php echo $selected ?> value="<?php echo $value ?>">
+                                                                        <?php echo $label ?>
+                                                                    </option>                                   
+                                                                    <?php
+                                                                    }
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group ">
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <label class="control-label" for="jabatan">Jabatan <span class="text-danger">*</span></label>
+                                                        </div>
+                                                        <div class="col-sm-8">
+                                                            <div class="">
+                                                                <select required=""  id="ctrl-jabatan" name="jabatan"  placeholder="Select a value ..."    class="custom-select" >
+                                                                    <option value="">Select a value ...</option>
+                                                                    <?php 
+                                                                    $jabatan_options = $comp_model -> user_jabatan_option_list();
+                                                                    if(!empty($jabatan_options)){
+                                                                    foreach($jabatan_options as $option){
+                                                                    $value = (!empty($option['value']) ? $option['value'] : null);
+                                                                    $label = (!empty($option['label']) ? $option['label'] : $value);
+                                                                    $selected = $this->set_field_selected('jabatan',$value, "Anggota");
+                                                                    ?>
+                                                                    <option <?php echo $selected; ?> value="<?php echo $value; ?>">
+                                                                        <?php echo $label; ?>
+                                                                    </option>
+                                                                    <?php
+                                                                    }
+                                                                    }
+                                                                    ?>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>

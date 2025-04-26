@@ -28,7 +28,7 @@ $show_export_btn = $this->show_export_btn;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">View  Inventaris</h4>
+                    <h4 class="record-title">Inventaris Detail</h4>
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@ $show_export_btn = $this->show_export_btn;
                                     <tr  class="td-nama_barang">
                                         <th class="title"> Nama Barang: </th>
                                         <td class="value">
-                                            <span <?php if($can_edit){ ?> data-source='<?php echo json_encode_quote(Menu :: $nama_barang); ?>' 
+                                            <span <?php if($can_edit){ ?> data-source='<?php print_link('api/json/inventaris_nama_barang_option_list'); ?>' 
                                                 data-value="<?php echo $data['nama_barang']; ?>" 
                                                 data-pk="<?php echo $data['id_barang'] ?>" 
                                                 data-url="<?php print_link("inventaris/editfield/" . urlencode($data['id_barang'])); ?>" 
@@ -74,7 +74,8 @@ $show_export_btn = $this->show_export_btn;
                                     <tr  class="td-jumlah_barang">
                                         <th class="title"> Jumlah Barang: </th>
                                         <td class="value">
-                                            <span <?php if($can_edit){ ?> data-value="<?php echo $data['jumlah_barang']; ?>" 
+                                            <span <?php if($can_edit){ ?> data-min="0" 
+                                                data-value="<?php echo $data['jumlah_barang']; ?>" 
                                                 data-pk="<?php echo $data['id_barang'] ?>" 
                                                 data-url="<?php print_link("inventaris/editfield/" . urlencode($data['id_barang'])); ?>" 
                                                 data-name="jumlah_barang" 
@@ -109,14 +110,14 @@ $show_export_btn = $this->show_export_btn;
                                         </td>
                                     </tr>
                                     <tr  class="td-tanggal_masuk">
-                                        <th class="title"> Tanggal Masuk: </th>
+                                        <th class="title"> Tanggal Ditambahkan: </th>
                                         <td class="value">
                                             <span <?php if($can_edit){ ?> data-flatpickr="{altFormat: 'Y-m-d H:i:s', minDate: '', maxDate: ''}" 
                                                 data-value="<?php echo $data['tanggal_masuk']; ?>" 
                                                 data-pk="<?php echo $data['id_barang'] ?>" 
                                                 data-url="<?php print_link("inventaris/editfield/" . urlencode($data['id_barang'])); ?>" 
                                                 data-name="tanggal_masuk" 
-                                                data-title="Enter Tanggal Masuk" 
+                                                data-title="Tanggal Ditambahkan" 
                                                 data-placement="left" 
                                                 data-toggle="click" 
                                                 data-type="flatdatetimepicker" 
@@ -124,6 +125,24 @@ $show_export_btn = $this->show_export_btn;
                                                 data-showbuttons="left" 
                                                 class="is-editable" <?php } ?>>
                                                 <?php echo $data['tanggal_masuk']; ?> 
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr  class="td-username">
+                                        <th class="title"> Ditambahkan oleh: </th>
+                                        <td class="value">
+                                            <span <?php if($can_edit){ ?> data-value="<?php echo $data['username']; ?>" 
+                                                data-pk="<?php echo $data['id_barang'] ?>" 
+                                                data-url="<?php print_link("inventaris/editfield/" . urlencode($data['id_barang'])); ?>" 
+                                                data-name="username" 
+                                                data-title="--USER_NAME--" 
+                                                data-placement="left" 
+                                                data-toggle="click" 
+                                                data-type="text" 
+                                                data-mode="popover" 
+                                                data-showbuttons="left" 
+                                                class="is-editable" <?php } ?>>
+                                                <?php echo $data['username']; ?> 
                                             </span>
                                         </td>
                                     </tr>
@@ -165,7 +184,7 @@ $show_export_btn = $this->show_export_btn;
                                                 </a>
                                                 <?php } ?>
                                                 <?php if($can_delete){ ?>
-                                                <a class="btn btn-sm btn-danger record-delete-btn mx-1"  href="<?php print_link("inventaris/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Are you sure you want to delete this record?" data-display-style="modal">
+                                                <a class="btn btn-sm btn-danger record-delete-btn mx-1"  href="<?php print_link("inventaris/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Yakin mau dihapus?" data-display-style="modal">
                                                     <i class="fa fa-times"></i> Delete
                                                 </a>
                                                 <?php } ?>

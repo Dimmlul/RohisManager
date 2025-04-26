@@ -22,7 +22,7 @@ $show_header = $this->show_header;
 $show_footer = $this->show_footer;
 $show_pagination = $this->show_pagination;
 ?>
-<section class="page" id="<?php echo $page_element_id; ?>" data-page-type="list"  data-display-type="table" data-page-url="<?php print_link($current_page); ?>">
+<section class="page ajax-page" id="<?php echo $page_element_id; ?>" data-page-type="list"  data-display-type="table" data-page-url="<?php print_link($current_page); ?>">
     <?php
     if( $show_header == true ){
     ?>
@@ -30,14 +30,31 @@ $show_pagination = $this->show_pagination;
         <div class="container-fluid">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">App Logs</h4>
+                    <h2 class="record-title">App Logs</h2>
                 </div>
                 <div class="col-sm-3 ">
                     <?php if($can_add){ ?>
-                    <a  class="btn btn btn-primary my-1" href="<?php print_link("app_logs/add") ?>">
-                        <i class="fa fa-plus"></i>                              
+                    <?php $modal_id = "modal-" . random_str(); ?>
+                    <button data-toggle="modal" data-target="#<?php  echo $modal_id ?>"  class="btn btn btn-primary my-1">
+                        <i class="fa fa-plus"></i>                                  
                         Add New App Logs 
-                    </a>
+                    </button>
+                    <div data-backdrop="true" id="<?php  echo $modal_id ?>" class="modal fade"  role="dialog" aria-labelledby="<?php  echo $modal_id ?>" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body p-0 reset-grids">
+                                    <div class=" ">
+                                        <?php  
+                                        $this->render_page("app_logs/add"); 
+                                        ?>
+                                    </div>
+                                </div>
+                                <div style="top: 5px; right:5px; z-index: 999;" class="position-absolute">
+                                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <?php } ?>
                 </div>
                 <div class="col-sm-4 ">
@@ -113,6 +130,7 @@ $show_pagination = $this->show_pagination;
                         <div  class=" animated fadeIn page-content">
                             <div id="app_logs-list-records">
                                 <div id="page-report-body" class="table-responsive">
+                                    <?php Html::ajaxpage_spinner(); ?>
                                     <table class="table  table-striped table-sm text-left">
                                         <thead class="table-header bg-light">
                                             <tr>
@@ -326,17 +344,17 @@ $show_pagination = $this->show_pagination;
                                                     </td>
                                                     <th class="td-btn">
                                                         <?php if($can_view){ ?>
-                                                        <a class="btn btn-sm btn-success has-tooltip" title="View Record" href="<?php print_link("app_logs/view/$rec_id"); ?>">
+                                                        <a class="btn btn-sm btn-success has-tooltip page-modal" title="View Record" href="<?php print_link("app_logs/view/$rec_id"); ?>">
                                                             <i class="fa fa-eye"></i> View
                                                         </a>
                                                         <?php } ?>
                                                         <?php if($can_edit){ ?>
-                                                        <a class="btn btn-sm btn-info has-tooltip" title="Edit This Record" href="<?php print_link("app_logs/edit/$rec_id"); ?>">
+                                                        <a class="btn btn-sm btn-info has-tooltip page-modal" title="Edit This Record" href="<?php print_link("app_logs/edit/$rec_id"); ?>">
                                                             <i class="fa fa-edit"></i> Edit
                                                         </a>
                                                         <?php } ?>
                                                         <?php if($can_delete){ ?>
-                                                        <a class="btn btn-sm btn-danger has-tooltip record-delete-btn" title="Delete this record" href="<?php print_link("app_logs/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Are you sure you want to delete this record?" data-display-style="modal">
+                                                        <a class="btn btn-sm btn-danger has-tooltip record-delete-btn" title="Delete this record" href="<?php print_link("app_logs/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Yakin mau dihapus?" data-display-style="modal">
                                                             <i class="fa fa-times"></i>
                                                             Delete
                                                         </a>
@@ -415,6 +433,7 @@ $show_pagination = $this->show_pagination;
                                                                     $pager->limit_count = $this->limit_count;
                                                                     $pager->show_page_number_list = true;
                                                                     $pager->pager_link_range=5;
+                                                                    $pager->ajax_page = true;
                                                                     $pager->render();
                                                                     }
                                                                     ?>

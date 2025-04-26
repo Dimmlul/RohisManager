@@ -30,9 +30,9 @@ $show_pagination = $this->show_pagination;
         <div class="container-fluid">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">Pengurus</h4>
+                    <h2 class="record-title">Pengurus</h2>
                 </div>
-                <div class="col-sm-3 ">
+                <div class="col-sm-4 ">
                     <?php if($can_add){ ?>
                     <a  class="btn btn btn-primary my-1" href="<?php print_link("pengurus/add") ?>">
                         <i class="fa fa-plus"></i>                              
@@ -50,7 +50,7 @@ $show_pagination = $this->show_pagination;
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-12 comp-grid">
+                    <div class="col-sm-4 comp-grid">
                         <div class="">
                             <!-- Page bread crumbs components-->
                             <?php
@@ -127,7 +127,6 @@ $show_pagination = $this->show_pagination;
                                                 <th class="td-sno">#</th>
                                                 <th  class="td-username"> Username</th>
                                                 <th  class="td-jabatan"> Jabatan</th>
-                                                <th  class="td-photo"> Photo</th>
                                                 <th class="td-btn"></th>
                                             </tr>
                                         </thead>
@@ -183,7 +182,6 @@ $show_pagination = $this->show_pagination;
                                                             <?php echo $data['jabatan']; ?> 
                                                         </span>
                                                     </td>
-                                                    <td class="td-photo"><?php Html :: page_img($data['photo'],50,50,1); ?></td>
                                                     <th class="td-btn">
                                                         <?php if($can_view){ ?>
                                                         <a class="btn btn-sm btn-success has-tooltip" title="View Record" href="<?php print_link("pengurus/view/$rec_id"); ?>">
@@ -262,6 +260,7 @@ $show_pagination = $this->show_pagination;
                                                                                 </a>
                                                                             </div>
                                                                         </div>
+                                                                        <?php Html :: import_form('pengurus/import_data' , "Import Data", 'CSV , JSON'); ?>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col">   

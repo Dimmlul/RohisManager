@@ -8,23 +8,11 @@
 class Menu{
 	
 	
-			public static $navbarsideleft = array(
+			public static $navbartopleft = array(
 		array(
 			'path' => 'home', 
 			'label' => 'Home', 
 			'icon' => '<i class="fa fa-home "></i>'
-		),
-		
-		array(
-			'path' => 'kas', 
-			'label' => 'Kas', 
-			'icon' => '<i class="fa fa-money "></i>'
-		),
-		
-		array(
-			'path' => 'inventaris', 
-			'label' => 'Inventaris', 
-			'icon' => '<i class="fa fa-archive "></i>'
 		),
 		
 		array(
@@ -49,10 +37,40 @@ class Menu{
 			'path' => 'absensi_kegiatan', 
 			'label' => 'Absensi Kegiatan', 
 			'icon' => '<i class="fa fa-check-square-o "></i>'
+		),
+		
+		array(
+			'path' => 'kas', 
+			'label' => 'Kas', 
+			'icon' => '<i class="fa fa-money "></i>'
+		),
+		
+		array(
+			'path' => 'inventaris', 
+			'label' => 'Inventaris', 
+			'icon' => '<i class="fa fa-archive "></i>','submenu' => array(
+		array(
+			'path' => 'inventaris', 
+			'label' => 'Inventaris', 
+			'icon' => '<i class="fa fa-archive "></i>'
+		),
+		
+		array(
+			'path' => 'barang', 
+			'label' => 'Barang', 
+			'icon' => '<i class="fa fa-sitemap "></i>'
+		)
+	)
 		)
 	);
 		
-			public static $navbartopleft = array(
+			public static $navbartopright = array(
+		array(
+			'path' => 'user', 
+			'label' => 'Anggota', 
+			'icon' => '<i class="fa fa-user "></i>'
+		),
+		
 		array(
 			'path' => 'app_logs', 
 			'label' => 'App Logs', 
@@ -72,26 +90,6 @@ class Menu{
 		)
 	);
 		
-			public static $navbartopright = array(
-		array(
-			'path' => 'jabatan', 
-			'label' => 'Jabatan', 
-			'icon' => '<i class="fa fa-user-secret "></i>'
-		),
-		
-		array(
-			'path' => 'pengurus', 
-			'label' => 'Pengurus', 
-			'icon' => '<i class="fa fa-user-plus "></i>'
-		),
-		
-		array(
-			'path' => 'user', 
-			'label' => 'Anggota', 
-			'icon' => '<i class="fa fa-users "></i>'
-		)
-	);
-		
 	
 	
 			public static $status = array(
@@ -106,91 +104,29 @@ class Menu{
 		array(
 			"value" => "Sakit", 
 			"label" => "Sakit", 
-		),
-		array(
-			"value" => "Alpha", 
-			"label" => "Alpha", 
-		),
-		array(
-			"value" => "Dispen", 
-			"label" => "Dispen", 
-		),);
-		
-			public static $nama_barang = array(
-		array(
-			"value" => "Sapu", 
-			"label" => "Sapu", 
-		),
-		array(
-			"value" => "Kipas", 
-			"label" => "Kipas", 
-		),
-		array(
-			"value" => "Vacuum", 
-			"label" => "Vacuum", 
-		),
-		array(
-			"value" => "Pel  Lantai", 
-			"label" => "Pel  Lantai", 
-		),
-		array(
-			"value" => "Ember", 
-			"label" => "Ember", 
-		),
-		array(
-			"value" => "Karpet Masjid", 
-			"label" => "Karpet Masjid", 
-		),
-		array(
-			"value" => "Mimbar", 
-			"label" => "Mimbar", 
-		),
-		array(
-			"value" => "Mikrofon", 
-			"label" => "Mikrofon", 
-		),
-		array(
-			"value" => "Speaker", 
-			"label" => "Speaker", 
-		),
-		array(
-			"value" => "Lampu", 
-			"label" => "Lampu", 
-		),
-		array(
-			"value" => "Al-Quran", 
-			"label" => "Al-Quran", 
-		),
-		array(
-			"value" => "Jam Dinding", 
-			"label" => "Jam Dinding", 
-		),
-		array(
-			"value" => "Bedug", 
-			"label" => "Bedug", 
 		),);
 		
 			public static $status_barang = array(
 		array(
-			"value" => "Bagus", 
-			"label" => "Bagus", 
+			"value" => "Baik", 
+			"label" => "Baik", 
 		),
 		array(
-			"value" => "Beberapa Rusak", 
-			"label" => "Beberapa Rusak", 
+			"value" => "Rusak Ringan", 
+			"label" => "Rusak Ringan", 
 		),
 		array(
-			"value" => "Rusak", 
-			"label" => "Rusak", 
+			"value" => "Rusak Berat", 
+			"label" => "Rusak Berat", 
 		),);
 		
 			public static $jenis_kas = array(
 		array(
-			"value" => "pemasukan", 
+			"value" => "Pemasukan", 
 			"label" => "Pemasukan", 
 		),
 		array(
-			"value" => "pengeluaran", 
+			"value" => "Pengeluaran", 
 			"label" => "Pengeluaran", 
 		),);
 		
@@ -208,12 +144,58 @@ class Menu{
 			"label" => "Acara", 
 		),
 		array(
-			"value" => "Sambutan", 
-			"label" => "Sambutan", 
-		),
-		array(
 			"value" => "Lomba", 
 			"label" => "Lomba", 
+		),
+		array(
+			"value" => "Kajian", 
+			"label" => "Kajian", 
+		),
+		array(
+			"value" => "Bakti Sosial", 
+			"label" => "Bakti Sosial", 
+		),
+		array(
+			"value" => "Pengajian Umum", 
+			"label" => "Pengajian Umum", 
+		),);
+		
+			public static $role = array(
+		array(
+			"value" => "Pengurus", 
+			"label" => "Pengurus", 
+		),
+		array(
+			"value" => "User", 
+			"label" => "User", 
+		),);
+		
+			public static $account_status = array(
+		array(
+			"value" => "Active", 
+			"label" => "Active", 
+		),
+		array(
+			"value" => "Pending", 
+			"label" => "Pending", 
+		),
+		array(
+			"value" => "Blocked", 
+			"label" => "Blocked", 
+		),);
+		
+			public static $role2 = array(
+		array(
+			"value" => "Administrator", 
+			"label" => "Administrator", 
+		),
+		array(
+			"value" => "Pengurus", 
+			"label" => "Pengurus", 
+		),
+		array(
+			"value" => "User", 
+			"label" => "User", 
 		),);
 		
 }

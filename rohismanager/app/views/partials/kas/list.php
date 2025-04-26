@@ -24,20 +24,18 @@ $show_pagination = $this->show_pagination;
 ?>
 <section class="page" id="<?php echo $page_element_id; ?>" data-page-type="list"  data-display-type="table" data-page-url="<?php print_link($current_page); ?>">
     <div  class="">
-        <div class="container">
-            <div class="row ">
-            </div>
-        </div>
-    </div>
-    <div  class="">
-        <div class="container-fluid">
+        <div class="">
             <div class="row ">
                 <div class="col-sm-12 comp-grid">
                     <div class=""><?php
-                        // Koneksi ke database
-                        $pdo = new PDO('mysql:host=localhost;dbname=kqnxdjgg_rohismanager', 'kqnxdjgg_rootadmin', 'rootadmin123..'); 
+                        require_once 'config.php'; // <<< WAJIB pakai require_once
+                        try {
+                        $pdo = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USERNAME, DB_PASSWORD);
                         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                        // Query untuk menghitung total pengeluaran, pemasukan dan total kas
+                        } catch (PDOException $e) {
+                        die('Database connection failed: ' . $e->getMessage());
+                        };
+                        // Query untuk menghitung total pemasukan dan pengeluaran
                         $query_kas = "
                         SELECT 
                         SUM(CASE WHEN jenis_kas = 'pengeluaran' THEN jumlah_kas ELSE 0 END) AS pengeluaran,
@@ -52,23 +50,11 @@ $show_pagination = $this->show_pagination;
                         // Tampilkan hasil dalam format yang lebih menarik
                         echo '<section style="padding: 40px 0; margin-bottom: 20px; background-color: #f8f9fa;">';
                             echo '  <div style="text-align: center; margin-bottom: 30px;">';
-                                echo '    <h1 style="font-size: 2.5em; margin-bottom: 20px; font-family: Arial, sans-serif; color: #072247;">Data Kas</h1>';
-                                echo '    <p style="font-size: 1.2em; color: #333; font-family: Arial, sans-serif;">Lihat total pengeluaran, pemasukan, dan saldo akhir kas</p>';
+                                /*echo '    <h1 style="font-size: 2.5em; margin-bottom: 20px; font-family: Arial, sans-serif; color: #072247;">Saldo Kas</h1>';*/
+                                /*echo '    <p style="font-size: 1.2em; color: #333; font-family: Arial, sans-serif;">Saldo akhir kas saat ini</p>';*/
                             echo '  </div>';
                             echo '  <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">';
-                                echo '    <div style="flex: 1 1 300px; background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #072247;">';
-                                    echo '      <h3 style="font-size: 1.7em; color: #072247; text-align: center;">Pengeluaran</h3>';
-                                    echo '      <p style="font-size: 1.3em; color: #333; text-align: center;">Rp ' . number_format($row['pengeluaran'], 0, ',', '.') . '</p>';
-                                echo '    </div>';
-                                echo '    <div style="flex: 1 1 300px; background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #072247; margin-left: 30px;">';
-                                    echo '      <h3 style="font-size: 1.7em; color: #072247; text-align: center;">Pemasukan</h3>';
-                                    echo '      <p style="font-size: 1.3em; color: #333; text-align: center;">Rp ' . number_format($row['pemasukan'], 0, ',', '.') . '</p>';
-                                echo '    </div>';
-                            echo '  </div>';
-                        echo '</section>';
-                        echo '<section style="padding: 20px 0; background-color: #f8f9fa;">';
-                            echo '  <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">';
-                                echo '    <div style="flex: 1 1 300px; background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #072247;">';
+                                echo '    <div style="flex: 1 1 300px; background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">'; 
                                     echo '      <h3 style="font-size: 1.7em; color: #072247; text-align: center;">Total Akhir Kas</h3>';
                                     echo '      <p style="font-size: 1.3em; color: #333; text-align: center;">Rp ' . number_format($total_kas, 0, ',', '.') . '</p>';
                                 echo '    </div>';
@@ -87,14 +73,31 @@ $show_pagination = $this->show_pagination;
         <div class="container-fluid">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">Riwayat Kas</h4>
+                    <h2 class="record-title">Riwayat Kas</h2>
                 </div>
-                <div class="col-sm-3 ">
+                <div class="col-sm-4 ">
                     <?php if($can_add){ ?>
-                    <a  class="btn btn btn-primary my-1" href="<?php print_link("kas/add") ?>">
-                        <i class="fa fa-plus"></i>                              
+                    <?php $modal_id = "modal-" . random_str(); ?>
+                    <button data-toggle="modal" data-target="#<?php  echo $modal_id ?>"  class="btn btn btn-primary my-1">
+                        <i class="fa fa-plus"></i>                                  
                         Tambah Kas 
-                    </a>
+                    </button>
+                    <div data-backdrop="true" id="<?php  echo $modal_id ?>" class="modal fade"  role="dialog" aria-labelledby="<?php  echo $modal_id ?>" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body p-0 reset-grids">
+                                    <div class=" ">
+                                        <?php  
+                                        $this->render_page("kas/add"); 
+                                        ?>
+                                    </div>
+                                </div>
+                                <div style="top: 5px; right:5px; z-index: 999;" class="position-absolute">
+                                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <?php } ?>
                 </div>
                 <div class="col-sm-4 ">
@@ -107,7 +110,7 @@ $show_pagination = $this->show_pagination;
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-12 comp-grid">
+                    <div class="col-sm-4 comp-grid">
                         <div class="">
                             <!-- Page bread crumbs components-->
                             <?php
@@ -185,6 +188,7 @@ $show_pagination = $this->show_pagination;
                                                 <th  class="td-jumlah_kas"> Jumlah Kas</th>
                                                 <th  class="td-jenis_kas"> Jenis Kas</th>
                                                 <th  class="td-deskripsi"> Deskripsi</th>
+                                                <th  class="td-username"> Ditambahkan oleh</th>
                                                 <th  class="td-tanggal"> Tanggal</th>
                                                 <th class="td-btn"></th>
                                             </tr>
@@ -210,21 +214,7 @@ $show_pagination = $this->show_pagination;
                                                     </th>
                                                     <?php } ?>
                                                     <th class="td-sno"><?php echo $counter; ?></th>
-                                                    <td class="td-jumlah_kas">
-                                                        <span <?php if($can_edit){ ?> data-value="<?php echo $data['jumlah_kas']; ?>" 
-                                                            data-pk="<?php echo $data['id_kas'] ?>" 
-                                                            data-url="<?php print_link("kas/editfield/" . urlencode($data['id_kas'])); ?>" 
-                                                            data-name="jumlah_kas" 
-                                                            data-title="Enter Jumlah Kas" 
-                                                            data-placement="left" 
-                                                            data-toggle="click" 
-                                                            data-type="number" 
-                                                            data-mode="popover" 
-                                                            data-showbuttons="left" 
-                                                            class="is-editable" <?php } ?>>
-                                                            <?php echo $data['jumlah_kas']; ?> 
-                                                        </span>
-                                                    </td>
+                                                    <td class="td-jumlah_kas"> <span><?php echo "Rp " .number_format($data['jumlah_kas']); ?></span></td>
                                                     <td class="td-jenis_kas">
                                                         <span <?php if($can_edit){ ?> data-source='<?php echo json_encode_quote(Menu :: $jenis_kas); ?>' 
                                                             data-value="<?php echo $data['jenis_kas']; ?>" 
@@ -255,20 +245,21 @@ $show_pagination = $this->show_pagination;
                                                             <?php echo $data['deskripsi']; ?> 
                                                         </span>
                                                     </td>
+                                                    <td class="td-username"> <?php echo $data['username']; ?></td>
                                                     <td class="td-tanggal"> <?php echo $data['tanggal']; ?></td>
                                                     <th class="td-btn">
                                                         <?php if($can_view){ ?>
-                                                        <a class="btn btn-sm btn-success has-tooltip" title="View Record" href="<?php print_link("kas/view/$rec_id"); ?>">
+                                                        <a class="btn btn-sm btn-success has-tooltip page-modal" title="View Record" href="<?php print_link("kas/view/$rec_id"); ?>">
                                                             <i class="fa fa-eye"></i> View
                                                         </a>
                                                         <?php } ?>
                                                         <?php if($can_edit){ ?>
-                                                        <a class="btn btn-sm btn-info has-tooltip" title="Edit This Record" href="<?php print_link("kas/edit/$rec_id"); ?>">
+                                                        <a class="btn btn-sm btn-info has-tooltip page-modal" title="Edit This Record" href="<?php print_link("kas/edit/$rec_id"); ?>">
                                                             <i class="fa fa-edit"></i> Edit
                                                         </a>
                                                         <?php } ?>
                                                         <?php if($can_delete){ ?>
-                                                        <a class="btn btn-sm btn-danger has-tooltip record-delete-btn" title="Delete this record" href="<?php print_link("kas/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Are you sure you want to delete this record?" data-display-style="modal">
+                                                        <a class="btn btn-sm btn-danger has-tooltip record-delete-btn" title="Delete this record" href="<?php print_link("kas/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Yakin mau dihapus?" data-display-style="modal">
                                                             <i class="fa fa-times"></i>
                                                             Delete
                                                         </a>
@@ -334,6 +325,7 @@ $show_pagination = $this->show_pagination;
                                                                                 </a>
                                                                             </div>
                                                                         </div>
+                                                                        <?php Html :: import_form('kas/import_data' , "Import Data", 'CSV , JSON'); ?>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col">   

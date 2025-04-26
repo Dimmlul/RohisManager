@@ -28,7 +28,7 @@ $show_export_btn = $this->show_export_btn;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">View  Roles</h4>
+                    <h4 class="record-title">Roles Detail</h4>
                 </div>
             </div>
         </div>
@@ -56,21 +56,21 @@ $show_export_btn = $this->show_export_btn;
                                         <th class="title"> Role Id: </th>
                                         <td class="value"> <?php echo $data['role_id']; ?></td>
                                     </tr>
-                                    <tr  class="td-role_name">
-                                        <th class="title"> Role Name: </th>
+                                    <tr  class="td-role">
+                                        <th class="title"> Role: </th>
                                         <td class="value">
-                                            <span <?php if($can_edit){ ?> data-value="<?php echo $data['role_name']; ?>" 
+                                            <span <?php if($can_edit){ ?> data-value="<?php echo $data['role']; ?>" 
                                                 data-pk="<?php echo $data['role_id'] ?>" 
                                                 data-url="<?php print_link("roles/editfield/" . urlencode($data['role_id'])); ?>" 
-                                                data-name="role_name" 
-                                                data-title="Enter Role Name" 
+                                                data-name="role" 
+                                                data-title="Enter Role" 
                                                 data-placement="left" 
                                                 data-toggle="click" 
                                                 data-type="text" 
                                                 data-mode="popover" 
                                                 data-showbuttons="left" 
                                                 class="is-editable" <?php } ?>>
-                                                <?php echo $data['role_name']; ?> 
+                                                <?php echo $data['role']; ?> 
                                             </span>
                                         </td>
                                     </tr>
@@ -112,7 +112,7 @@ $show_export_btn = $this->show_export_btn;
                                                 </a>
                                                 <?php } ?>
                                                 <?php if($can_delete){ ?>
-                                                <a class="btn btn-sm btn-danger record-delete-btn mx-1"  href="<?php print_link("roles/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Are you sure you want to delete this record?" data-display-style="modal">
+                                                <a class="btn btn-sm btn-danger record-delete-btn mx-1"  href="<?php print_link("roles/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Yakin mau dihapus?" data-display-style="modal">
                                                     <i class="fa fa-times"></i> Delete
                                                 </a>
                                                 <?php } ?>

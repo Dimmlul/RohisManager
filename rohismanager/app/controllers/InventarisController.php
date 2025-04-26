@@ -22,6 +22,7 @@ class InventarisController extends SecureController{
 			"nama_barang", 
 			"jumlah_barang", 
 			"status_barang", 
+			"username", 
 			"tanggal_masuk");
 		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
 		//search table record
@@ -29,10 +30,10 @@ class InventarisController extends SecureController{
 			$text = trim($request->search); 
 			$search_condition = "(
 				inventaris.id_barang LIKE ? OR 
-				inventaris.id_pengurus LIKE ? OR 
 				inventaris.nama_barang LIKE ? OR 
 				inventaris.jumlah_barang LIKE ? OR 
 				inventaris.status_barang LIKE ? OR 
+				inventaris.username LIKE ? OR 
 				inventaris.tanggal_masuk LIKE ?
 			)";
 			$search_params = array(
@@ -74,7 +75,8 @@ class InventarisController extends SecureController{
 		$this->view->report_layout = "report_layout.php";
 		$this->view->report_paper_size = "A4";
 		$this->view->report_orientation = "portrait";
-		$this->render_view("inventaris/list.php", $data); //render the full page
+		$view_name = (is_ajax() ? "inventaris/ajax-list.php" : "inventaris/list.php");
+		$this->render_view($view_name, $data);
 	}
 	/**
      * Load csv|json data
@@ -142,7 +144,8 @@ class InventarisController extends SecureController{
 			"nama_barang", 
 			"jumlah_barang", 
 			"status_barang", 
-			"tanggal_masuk");
+			"tanggal_masuk", 
+			"username");
 		if($value){
 			$db->where($rec_id, urldecode($value)); //select record based on field name
 		}
@@ -180,20 +183,20 @@ class InventarisController extends SecureController{
 			$tablename = $this->tablename;
 			$request = $this->request;
 			//fillable fields
-			$fields = $this->fields = array("id_pengurus","nama_barang","jumlah_barang","status_barang","tanggal_masuk");
+			$fields = $this->fields = array("nama_barang","jumlah_barang","status_barang","username","tanggal_masuk");
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
-				'id_pengurus' => 'required',
 				'nama_barang' => 'required',
-				'jumlah_barang' => 'required|numeric',
+				'jumlah_barang' => 'required|numeric|min_numeric,0',
 				'status_barang' => 'required',
+				'username' => 'required',
 				'tanggal_masuk' => 'required',
 			);
 			$this->sanitize_array = array(
-				'id_pengurus' => 'sanitize_string',
 				'nama_barang' => 'sanitize_string',
 				'jumlah_barang' => 'sanitize_string',
 				'status_barang' => 'sanitize_string',
+				'username' => 'sanitize_string',
 				'tanggal_masuk' => 'sanitize_string',
 			);
 			$this->filter_vals = true; //set whether to remove empty fields
@@ -207,7 +210,7 @@ class InventarisController extends SecureController{
 				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 				if($rec_id){
 					$this->write_to_log("add", "true");
-					$this->set_flash_msg("Record added successfully", "success");
+					$this->set_flash_msg("Berhasil ditambahkan ✅", "success");
 					return	$this->redirect("inventaris");
 				}
 				else{
@@ -230,21 +233,21 @@ class InventarisController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		 //editable fields
-		$fields = $this->fields = array("id_barang","id_pengurus","nama_barang","jumlah_barang","status_barang","tanggal_masuk");
+		$fields = $this->fields = array("id_barang","nama_barang","jumlah_barang","status_barang","username","tanggal_masuk");
 		if($formdata){
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
-				'id_pengurus' => 'required',
 				'nama_barang' => 'required',
-				'jumlah_barang' => 'required|numeric',
+				'jumlah_barang' => 'required|numeric|min_numeric,0',
 				'status_barang' => 'required',
+				'username' => 'required',
 				'tanggal_masuk' => 'required',
 			);
 			$this->sanitize_array = array(
-				'id_pengurus' => 'sanitize_string',
 				'nama_barang' => 'sanitize_string',
 				'jumlah_barang' => 'sanitize_string',
 				'status_barang' => 'sanitize_string',
+				'username' => 'sanitize_string',
 				'tanggal_masuk' => 'sanitize_string',
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
@@ -297,7 +300,7 @@ class InventarisController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("id_barang","id_pengurus","nama_barang","jumlah_barang","status_barang","tanggal_masuk");
+		$fields = $this->fields = array("id_barang","nama_barang","jumlah_barang","status_barang","username","tanggal_masuk");
 		$page_error = null;
 		if($formdata){
 			$postdata = array();
@@ -306,17 +309,17 @@ class InventarisController extends SecureController{
 			$postdata[$fieldname] = $fieldvalue;
 			$postdata = $this->format_request_data($postdata);
 			$this->rules_array = array(
-				'id_pengurus' => 'required',
 				'nama_barang' => 'required',
-				'jumlah_barang' => 'required|numeric',
+				'jumlah_barang' => 'required|numeric|min_numeric,0',
 				'status_barang' => 'required',
+				'username' => 'required',
 				'tanggal_masuk' => 'required',
 			);
 			$this->sanitize_array = array(
-				'id_pengurus' => 'sanitize_string',
 				'nama_barang' => 'sanitize_string',
 				'jumlah_barang' => 'sanitize_string',
 				'status_barang' => 'sanitize_string',
+				'username' => 'sanitize_string',
 				'tanggal_masuk' => 'sanitize_string',
 			);
 			$this->filter_rules = true; //filter validation rules by excluding fields not in the formdata
@@ -374,7 +377,7 @@ class InventarisController extends SecureController{
 		$bool = $db->delete($tablename);
 		if($bool){
 			$this->write_to_log("delete", "true");
-			$this->set_flash_msg("Record deleted successfully", "success");
+			$this->set_flash_msg("Berhasil dihapus ✅  ", "success");
 		}
 		elseif($db->getLastError()){
 			$page_error = $db->getLastError();

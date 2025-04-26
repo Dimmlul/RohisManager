@@ -22,6 +22,7 @@ class KegiatanController extends SecureController{
 			"nama_kegiatan", 
 			"lokasi_kegiatan", 
 			"deskripsi_kegiatan", 
+			"username", 
 			"kategori_kegiatan", 
 			"tanggal_kegiatan");
 		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
@@ -30,10 +31,10 @@ class KegiatanController extends SecureController{
 			$text = trim($request->search); 
 			$search_condition = "(
 				kegiatan.id_kegiatan LIKE ? OR 
-				kegiatan.id_pengurus LIKE ? OR 
 				kegiatan.nama_kegiatan LIKE ? OR 
 				kegiatan.lokasi_kegiatan LIKE ? OR 
 				kegiatan.deskripsi_kegiatan LIKE ? OR 
+				kegiatan.username LIKE ? OR 
 				kegiatan.kategori_kegiatan LIKE ? OR 
 				kegiatan.tanggal_kegiatan LIKE ?
 			)";
@@ -56,10 +57,6 @@ class KegiatanController extends SecureController{
 		if($fieldname){
 			$db->where($fieldname , $fieldvalue); //filter by a single field name
 		}
-		if(!empty($request->kegiatan_tanggal_kegiatan)){
-			$val = $request->kegiatan_tanggal_kegiatan;
-			$db->where("DATE(kegiatan.tanggal_kegiatan)", $val , "=");
-		}
 		$tc = $db->withTotalCount();
 		$records = $db->get($tablename, $pagination, $fields);
 		$records_count = count($records);
@@ -80,7 +77,59 @@ class KegiatanController extends SecureController{
 		$this->view->report_layout = "report_layout.php";
 		$this->view->report_paper_size = "A4";
 		$this->view->report_orientation = "portrait";
-		$this->render_view("kegiatan/list.php", $data); //render the full page
+		$view_name = (is_ajax() ? "kegiatan/ajax-list.php" : "kegiatan/list.php");
+		$this->render_view($view_name, $data);
+	}
+	/**
+     * Load csv|json data
+     * @return data
+     */
+	function import_data(){
+		if(!empty($_FILES['file'])){
+			$finfo = pathinfo($_FILES['file']['name']);
+			$ext = strtolower($finfo['extension']);
+			if(!in_array($ext , array('csv','json'))){
+				$this->set_flash_msg("File format not supported", "danger");
+			}
+			else{
+			$file_path = null;
+			$uploader=new Uploader;
+			$config = array('uploadDir' => UPLOAD_FILE_DIR, 'title' => '{{file_name}}{{date}}', 'required' => true, 'extensions' => array('csv','json'), 'filenameprefix' => 'kegiatan_');
+			$upload_data=$uploader->upload($_FILES['file'], $config);
+			if($upload_data['isComplete']){
+				$files = $upload_data['data'];
+				$file_path = $upload_data['data']['files'][0];
+			}
+			if($upload_data['hasErrors']){
+				$this->set_flash_msg($upload_data['errors'], "danger");
+			}
+				if(!empty($file_path)){
+					$request = $this->request;
+					$db = $this->GetModel();
+					$tablename = $this->tablename;
+					if($ext == "csv"){
+						$options = array('table' => $tablename, 'fields' => '', 'delimiter' => ',', 'quote' => '"');
+						$data = $db->loadCsvData($file_path , $options , true);
+					}
+					else{
+						$data = $db->loadJsonData($file_path, $tablename , true);
+					}
+					if($db->getLastError()){
+						$this->set_flash_msg($db->getLastError(), "danger");
+					}
+					else{
+						$this->set_flash_msg("Data imported successfully", "success");
+					}
+				}
+				else{
+					$this->set_flash_msg("Error uploading file", "success");
+				}
+			}
+		}
+		else{
+			$this->set_flash_msg("No file selected for upload", "warning");
+		}
+		$this->redirect("kegiatan");
 	}
 	/**
      * View record detail 
@@ -94,12 +143,12 @@ class KegiatanController extends SecureController{
 		$rec_id = $this->rec_id = urldecode($rec_id);
 		$tablename = $this->tablename;
 		$fields = array("id_kegiatan", 
-			"id_pengurus", 
 			"nama_kegiatan", 
 			"lokasi_kegiatan", 
 			"deskripsi_kegiatan", 
 			"kategori_kegiatan", 
-			"tanggal_kegiatan");
+			"tanggal_kegiatan", 
+			"username");
 		if($value){
 			$db->where($rec_id, urldecode($value)); //select record based on field name
 		}
@@ -137,10 +186,10 @@ class KegiatanController extends SecureController{
 			$tablename = $this->tablename;
 			$request = $this->request;
 			//fillable fields
-			$fields = $this->fields = array("id_pengurus","nama_kegiatan","lokasi_kegiatan","deskripsi_kegiatan","kategori_kegiatan","tanggal_kegiatan");
+			$fields = $this->fields = array("username","nama_kegiatan","lokasi_kegiatan","deskripsi_kegiatan","kategori_kegiatan","tanggal_kegiatan");
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
-				'id_pengurus' => 'required',
+				'username' => 'required',
 				'nama_kegiatan' => 'required',
 				'lokasi_kegiatan' => 'required',
 				'deskripsi_kegiatan' => 'required',
@@ -148,7 +197,7 @@ class KegiatanController extends SecureController{
 				'tanggal_kegiatan' => 'required',
 			);
 			$this->sanitize_array = array(
-				'id_pengurus' => 'sanitize_string',
+				'username' => 'sanitize_string',
 				'nama_kegiatan' => 'sanitize_string',
 				'lokasi_kegiatan' => 'sanitize_string',
 				'deskripsi_kegiatan' => 'sanitize_string',
@@ -161,7 +210,7 @@ class KegiatanController extends SecureController{
 				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 				if($rec_id){
 					$this->write_to_log("add", "true");
-					$this->set_flash_msg("Record added successfully", "success");
+					$this->set_flash_msg("Berhasil ditambahkan ✅", "success");
 					return	$this->redirect("kegiatan");
 				}
 				else{
@@ -169,7 +218,7 @@ class KegiatanController extends SecureController{
 				}
 			}
 		}
-		$page_title = $this->view->page_title = "Add New Kegiatan";
+		$page_title = $this->view->page_title = "Tambahkan Kegiatan Baru";
 		$this->render_view("kegiatan/add.php");
 	}
 	/**
@@ -184,11 +233,11 @@ class KegiatanController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		 //editable fields
-		$fields = $this->fields = array("id_kegiatan","id_pengurus","nama_kegiatan","lokasi_kegiatan","deskripsi_kegiatan","kategori_kegiatan","tanggal_kegiatan");
+		$fields = $this->fields = array("id_kegiatan","username","nama_kegiatan","lokasi_kegiatan","deskripsi_kegiatan","kategori_kegiatan","tanggal_kegiatan");
 		if($formdata){
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
-				'id_pengurus' => 'required',
+				'username' => 'required',
 				'nama_kegiatan' => 'required',
 				'lokasi_kegiatan' => 'required',
 				'deskripsi_kegiatan' => 'required',
@@ -196,7 +245,7 @@ class KegiatanController extends SecureController{
 				'tanggal_kegiatan' => 'required',
 			);
 			$this->sanitize_array = array(
-				'id_pengurus' => 'sanitize_string',
+				'username' => 'sanitize_string',
 				'nama_kegiatan' => 'sanitize_string',
 				'lokasi_kegiatan' => 'sanitize_string',
 				'deskripsi_kegiatan' => 'sanitize_string',
@@ -246,7 +295,7 @@ class KegiatanController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("id_kegiatan","id_pengurus","nama_kegiatan","lokasi_kegiatan","deskripsi_kegiatan","kategori_kegiatan","tanggal_kegiatan");
+		$fields = $this->fields = array("id_kegiatan","username","nama_kegiatan","lokasi_kegiatan","deskripsi_kegiatan","kategori_kegiatan","tanggal_kegiatan");
 		$page_error = null;
 		if($formdata){
 			$postdata = array();
@@ -255,7 +304,7 @@ class KegiatanController extends SecureController{
 			$postdata[$fieldname] = $fieldvalue;
 			$postdata = $this->format_request_data($postdata);
 			$this->rules_array = array(
-				'id_pengurus' => 'required',
+				'username' => 'required',
 				'nama_kegiatan' => 'required',
 				'lokasi_kegiatan' => 'required',
 				'deskripsi_kegiatan' => 'required',
@@ -263,7 +312,7 @@ class KegiatanController extends SecureController{
 				'tanggal_kegiatan' => 'required',
 			);
 			$this->sanitize_array = array(
-				'id_pengurus' => 'sanitize_string',
+				'username' => 'sanitize_string',
 				'nama_kegiatan' => 'sanitize_string',
 				'lokasi_kegiatan' => 'sanitize_string',
 				'deskripsi_kegiatan' => 'sanitize_string',
@@ -318,7 +367,7 @@ class KegiatanController extends SecureController{
 		$bool = $db->delete($tablename);
 		if($bool){
 			$this->write_to_log("delete", "true");
-			$this->set_flash_msg("Record deleted successfully", "success");
+			$this->set_flash_msg("Berhasil dihapus ✅  ", "success");
 		}
 		elseif($db->getLastError()){
 			$page_error = $db->getLastError();

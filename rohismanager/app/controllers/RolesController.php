@@ -19,14 +19,14 @@ class RolesController extends SecureController{
 		$db = $this->GetModel();
 		$tablename = $this->tablename;
 		$fields = array("role_id", 
-			"role_name");
+			"role");
 		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
 		//search table record
 		if(!empty($request->search)){
 			$text = trim($request->search); 
 			$search_condition = "(
 				roles.role_id LIKE ? OR 
-				roles.role_name LIKE ?
+				roles.role LIKE ?
 			)";
 			$search_params = array(
 				"%$text%","%$text%"
@@ -67,7 +67,8 @@ class RolesController extends SecureController{
 		$this->view->report_layout = "report_layout.php";
 		$this->view->report_paper_size = "A4";
 		$this->view->report_orientation = "portrait";
-		$this->render_view("roles/list.php", $data); //render the full page
+		$view_name = (is_ajax() ? "roles/ajax-list.php" : "roles/list.php");
+		$this->render_view($view_name, $data);
 	}
 	/**
      * View record detail 
@@ -81,7 +82,7 @@ class RolesController extends SecureController{
 		$rec_id = $this->rec_id = urldecode($rec_id);
 		$tablename = $this->tablename;
 		$fields = array("role_id", 
-			"role_name");
+			"role");
 		if($value){
 			$db->where($rec_id, urldecode($value)); //select record based on field name
 		}
@@ -119,13 +120,13 @@ class RolesController extends SecureController{
 			$tablename = $this->tablename;
 			$request = $this->request;
 			//fillable fields
-			$fields = $this->fields = array("role_name");
+			$fields = $this->fields = array("role");
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
-				'role_name' => 'required',
+				'role' => 'required',
 			);
 			$this->sanitize_array = array(
-				'role_name' => 'sanitize_string',
+				'role' => 'sanitize_string',
 			);
 			$this->filter_vals = true; //set whether to remove empty fields
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
@@ -133,7 +134,7 @@ class RolesController extends SecureController{
 				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 				if($rec_id){
 					$this->write_to_log("add", "true");
-					$this->set_flash_msg("Record added successfully", "success");
+					$this->set_flash_msg("Berhasil ditambahkan ✅", "success");
 					return	$this->redirect("roles");
 				}
 				else{
@@ -156,14 +157,14 @@ class RolesController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		 //editable fields
-		$fields = $this->fields = array("role_id","role_name");
+		$fields = $this->fields = array("role_id","role");
 		if($formdata){
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
-				'role_name' => 'required',
+				'role' => 'required',
 			);
 			$this->sanitize_array = array(
-				'role_name' => 'sanitize_string',
+				'role' => 'sanitize_string',
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			if($this->validated()){
@@ -208,7 +209,7 @@ class RolesController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("role_id","role_name");
+		$fields = $this->fields = array("role_id","role");
 		$page_error = null;
 		if($formdata){
 			$postdata = array();
@@ -217,10 +218,10 @@ class RolesController extends SecureController{
 			$postdata[$fieldname] = $fieldvalue;
 			$postdata = $this->format_request_data($postdata);
 			$this->rules_array = array(
-				'role_name' => 'required',
+				'role' => 'required',
 			);
 			$this->sanitize_array = array(
-				'role_name' => 'sanitize_string',
+				'role' => 'sanitize_string',
 			);
 			$this->filter_rules = true; //filter validation rules by excluding fields not in the formdata
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
@@ -270,7 +271,7 @@ class RolesController extends SecureController{
 		$bool = $db->delete($tablename);
 		if($bool){
 			$this->write_to_log("delete", "true");
-			$this->set_flash_msg("Record deleted successfully", "success");
+			$this->set_flash_msg("Berhasil dihapus ✅  ", "success");
 		}
 		elseif($db->getLastError()){
 			$page_error = $db->getLastError();

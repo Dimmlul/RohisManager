@@ -163,7 +163,7 @@ class BaseController{
 			"title" => "{{random}}",
 			"extensions" => ".jpg,.png,.gif,.jpeg",
 			"limit" => "1",
-			"filesize" => "3",
+			"filesize" => "100",
 			"returnfullpath" => true,
 			"filenameprefix" => "",
 			"uploadDir" => "uploads/files/"
@@ -174,7 +174,7 @@ class BaseController{
 			"title" => "{{random}}",
 			"extensions" => ".jpg,.png,.gif,.jpeg",
 			"limit" => "1",
-			"filesize" => "100",
+			"filesize" => "3",
 			"returnfullpath" => true,
 			"filenameprefix" => "",
 			"uploadDir" => "uploads/files/"
@@ -183,11 +183,11 @@ class BaseController{
 
 		$this->file_upload_settings['foto'] = array(
 			"title" => "{{file_name}}",
-			"extensions" => "",
-			"limit" => "100",
-			"filesize" => "1024",
+			"extensions" => ".jpg,.png,.gif,.jpeg",
+			"limit" => "500",
+			"filesize" => "10240",
 			"returnfullpath" => false,
-			"filenameprefix" => "",
+			"filenameprefix" => "Rohis - ",
 			"uploadDir" => "uploads/files/"
 		);
 	

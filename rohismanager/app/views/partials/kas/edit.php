@@ -18,7 +18,7 @@ $redirect_to = $this->redirect_to;
         <div class="container">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">Edit  Kas</h4>
+                    <h4 class="record-title">Edit Kas</h4>
                 </div>
             </div>
         </div>
@@ -34,36 +34,6 @@ $redirect_to = $this->redirect_to;
                     <div  class="bg-light p-3 animated fadeIn page-content">
                         <form novalidate  id="" role="form" enctype="multipart/form-data"  class="form page-form form-horizontal needs-validation" action="<?php print_link("kas/edit/$page_id/?csrf_token=$csrf_token"); ?>" method="post">
                             <div>
-                                <div class="form-group ">
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            <label class="control-label" for="id_pengurus">Id Pengurus <span class="text-danger">*</span></label>
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <div class="">
-                                                <select required=""  id="ctrl-id_pengurus" name="id_pengurus"  placeholder="Select a value ..."    class="custom-select" >
-                                                    <option value="">Select a value ...</option>
-                                                    <?php
-                                                    $rec = $data['id_pengurus'];
-                                                    $id_pengurus_options = $comp_model -> kas_id_pengurus_option_list();
-                                                    if(!empty($id_pengurus_options)){
-                                                    foreach($id_pengurus_options as $option){
-                                                    $value = (!empty($option['value']) ? $option['value'] : null);
-                                                    $label = (!empty($option['label']) ? $option['label'] : $value);
-                                                    $selected = ( $value == $rec ? 'selected' : null );
-                                                    ?>
-                                                    <option 
-                                                        <?php echo $selected; ?> value="<?php echo $value; ?>"><?php echo $label; ?>
-                                                    </option>
-                                                    <?php
-                                                    }
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
