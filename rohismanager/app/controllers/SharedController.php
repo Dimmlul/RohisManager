@@ -111,6 +111,17 @@ class SharedController extends BaseController{
 	}
 
 	/**
+     * barang_nama_barang_value_exist Model Action
+     * @return array
+     */
+	function barang_nama_barang_value_exist($val){
+		$db = $this->GetModel();
+		$db->where("nama_barang", $val);
+		$exist = $db->has("barang");
+		return $exist;
+	}
+
+	/**
 	* barchart_ Model Action
 	* @return array
 	*/

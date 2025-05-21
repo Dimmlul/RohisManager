@@ -174,28 +174,6 @@ class Menu{
 		array(
 			"value" => "Active", 
 			"label" => "Active", 
-		),
-		array(
-			"value" => "Pending", 
-			"label" => "Pending", 
-		),
-		array(
-			"value" => "Blocked", 
-			"label" => "Blocked", 
-		),);
-		
-			public static $role2 = array(
-		array(
-			"value" => "Administrator", 
-			"label" => "Administrator", 
-		),
-		array(
-			"value" => "Pengurus", 
-			"label" => "Pengurus", 
-		),
-		array(
-			"value" => "User", 
-			"label" => "User", 
 		),);
 		
 }

@@ -24,9 +24,9 @@ $show_pagination = $this->show_pagination;
 ?>
 <section class="page" id="<?php echo $page_element_id; ?>" data-page-type="list"  data-display-type="table" data-page-url="<?php print_link($current_page); ?>">
     <div  class="">
-        <div class="">
+        <div class="container">
             <div class="row ">
-                <div class="col-sm-12 comp-grid">
+                <div class="col-md-12 comp-grid">
                     <div class=""><?php
                         require_once 'config.php'; // <<< WAJIB pakai require_once
                         try {
@@ -47,14 +47,13 @@ $show_pagination = $this->show_pagination;
                         $row = $stmt_kas->fetch(PDO::FETCH_ASSOC);
                         // Calculate the total balance (total kas)
                         $total_kas = $row['pemasukan'] - $row['pengeluaran'];
-                        // Tampilkan hasil dalam format yang lebih menarik
-                        echo '<section style="padding: 40px 0; margin-bottom: 20px; background-color: #f8f9fa;">';
+                        echo '<section style="padding: 40px 0; margin-bottom: 20px; background-color: #ffffff;">';
                             echo '  <div style="text-align: center; margin-bottom: 30px;">';
                                 /*echo '    <h1 style="font-size: 2.5em; margin-bottom: 20px; font-family: Arial, sans-serif; color: #072247;">Saldo Kas</h1>';*/
                                 /*echo '    <p style="font-size: 1.2em; color: #333; font-family: Arial, sans-serif;">Saldo akhir kas saat ini</p>';*/
                             echo '  </div>';
                             echo '  <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">';
-                                echo '    <div style="flex: 1 1 300px; background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">'; 
+                                echo '    <div style="flex: 1 1 300px; background-color: #ffffff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">'; 
                                     echo '      <h3 style="font-size: 1.7em; color: #072247; text-align: center;">Total Akhir Kas</h3>';
                                     echo '      <p style="font-size: 1.3em; color: #333; text-align: center;">Rp ' . number_format($total_kas, 0, ',', '.') . '</p>';
                                 echo '    </div>';

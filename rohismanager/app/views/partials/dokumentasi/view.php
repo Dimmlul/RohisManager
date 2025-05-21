@@ -73,7 +73,7 @@ $show_export_btn = $this->show_export_btn;
                                     </tr>
                                     <tr  class="td-foto">
                                         <th class="title"> Foto: </th>
-                                        <td class="value"><?php Html :: page_img($data['foto'],250,250,-1); ?></td>
+                                        <td class="value"><?php Html :: page_img($data['foto'],480,480,-1); ?></td>
                                     </tr>
                                     <tr  class="td-deskripsi_dokumen">
                                         <th class="title"> Deskripsi Dokumen: </th>

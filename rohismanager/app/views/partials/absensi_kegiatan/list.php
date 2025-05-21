@@ -23,10 +23,10 @@ $show_footer = $this->show_footer;
 $show_pagination = $this->show_pagination;
 ?>
 <section class="page" id="<?php echo $page_element_id; ?>" data-page-type="list"  data-display-type="table" data-page-url="<?php print_link($current_page); ?>">
-    <div  class="py-1">
-        <div class="">
-            <div class="row justify-content-center">
-                <div class="col-sm-12 comp-grid">
+    <div  class="">
+        <div class="container-fluid">
+            <div class="row ">
+                <div class="col-sm-12 ">
                     <div class=""><?php
                         require_once 'config.php'; // <<< WAJIB pakai require_once
                         try {
@@ -68,12 +68,12 @@ $show_pagination = $this->show_pagination;
                         $stmt_kegiatan->execute();
                         $total_pages = ceil($total_kegiatan / $items_per_page);
                         // Tampilkan tabel
-                        echo '<section style="padding: 50px 0; margin-bottom: 20px; background-color: #f4f4f4;">';
+                        echo '<section style="padding: 50px 0; margin-bottom: 20px; background-color: #ffffff;">';
                             echo '  <div style="text-align: center; margin-bottom: 30px;">';
                                 echo '    <h1 style="font-size: 2.5em; margin-bottom: 20px; font-family: Arial, sans-serif; color: #072247;">Data Absensi Kegiatan</h1>';
                             echo '  </div>';
                             echo '  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">';
-                                echo '    <div style="flex: 1 1 800px; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">';
+                                echo '    <div style="flex: 1 1 800px; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">';
                                     echo '      <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; background-color: #fff;">';
                                         echo '        <thead>';
                                             echo '          <tr>';

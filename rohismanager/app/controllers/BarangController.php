@@ -180,6 +180,11 @@ class BarangController extends SecureController{
 			);
 			$this->filter_vals = true; //set whether to remove empty fields
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
+			//Check if Duplicate Record Already Exit In The Database
+			$db->where("nama_barang", $modeldata['nama_barang']);
+			if($db->has($tablename)){
+				$this->view->page_error[] = $modeldata['nama_barang']." Already exist!";
+			} 
 			if($this->validated()){
 				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 				if($rec_id){
@@ -216,6 +221,13 @@ class BarangController extends SecureController{
 				'nama_barang' => 'sanitize_string',
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
+			//Check if Duplicate Record Already Exit In The Database
+			if(isset($modeldata['nama_barang'])){
+				$db->where("nama_barang", $modeldata['nama_barang'])->where("id_barang", $rec_id, "!=");
+				if($db->has($tablename)){
+					$this->view->page_error[] = $modeldata['nama_barang']." Already exist!";
+				}
+			} 
 			if($this->validated()){
 				$db->where("barang.id_barang", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);
@@ -273,6 +285,13 @@ class BarangController extends SecureController{
 			);
 			$this->filter_rules = true; //filter validation rules by excluding fields not in the formdata
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
+			//Check if Duplicate Record Already Exit In The Database
+			if(isset($modeldata['nama_barang'])){
+				$db->where("nama_barang", $modeldata['nama_barang'])->where("id_barang", $rec_id, "!=");
+				if($db->has($tablename)){
+					$this->view->page_error[] = $modeldata['nama_barang']." Already exist!";
+				}
+			} 
 			if($this->validated()){
 				$db->where("barang.id_barang", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);

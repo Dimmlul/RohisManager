@@ -22,6 +22,10 @@ class AccountController extends SecureController{
 			"email", 
 			"role", 
 			"jabatan");
+		$allowed_roles = array ('administrator', 'pengurus', 'user');
+		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
+		$db->where("user.role", get_active_user('role') );
+		}
 		$user = $db->getOne($tablename , $fields);
 		if(!empty($user)){
 			$page_title = $this->view->page_title = "Akun Saya";
@@ -43,45 +47,31 @@ class AccountController extends SecureController{
 		$rec_id = $this->rec_id = USER_ID;
 		$tablename = $this->tablename;
 		 //editable fields
-		$fields = $this->fields = array("id_user","username","email","password","photo","jabatan");
+		$fields = $this->fields = array("id_user","username","photo","jabatan");
 		if($formdata){
 			$postdata = $this->format_request_data($formdata);
-			$cpassword = $postdata['confirm_password'];
-			$password = $postdata['password'];
-			if($cpassword != $password){
-				$this->view->page_error[] = "Your password confirmation is not consistent";
-			}
 			$this->rules_array = array(
 				'username' => 'required',
-				'email' => 'required|valid_email',
-				'password' => 'required',
 				'jabatan' => 'required',
 			);
 			$this->sanitize_array = array(
 				'username' => 'sanitize_string',
-				'email' => 'sanitize_string',
 				'photo' => 'sanitize_string',
 				'jabatan' => 'sanitize_string',
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
-			$password_text = $modeldata['password'];
-			//update modeldata with the password hash
-			$modeldata['password'] = $this->modeldata['password'] = password_hash($password_text , PASSWORD_DEFAULT);
 			//Check if Duplicate Record Already Exit In The Database
 			if(isset($modeldata['username'])){
 				$db->where("username", $modeldata['username'])->where("id_user", $rec_id, "!=");
 				if($db->has($tablename)){
 					$this->view->page_error[] = $modeldata['username']." Already exist!";
 				}
-			}
-			//Check if Duplicate Record Already Exit In The Database
-			if(isset($modeldata['email'])){
-				$db->where("email", $modeldata['email'])->where("id_user", $rec_id, "!=");
-				if($db->has($tablename)){
-					$this->view->page_error[] = $modeldata['email']." Already exist!";
-				}
 			} 
 			if($this->validated()){
+		$allowed_roles = array ('administrator');
+		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
+		$db->where("user.role", get_active_user('role') );
+		}
 				$db->where("user.id_user", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);
 				$numRows = $db->getRowCount(); //number of affected rows. 0 = no record field updated
@@ -104,6 +94,10 @@ class AccountController extends SecureController{
 					}
 				}
 			}
+		}
+		$allowed_roles = array ('administrator');
+		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
+		$db->where("user.role", get_active_user('role') );
 		}
 		$db->where("user.id_user", $rec_id);;
 		$data = $db->getOne($tablename, $fields);

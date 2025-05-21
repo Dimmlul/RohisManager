@@ -143,7 +143,9 @@ $show_pagination = $this->show_pagination;
                                                 <?php } ?>
                                                 <th class="td-sno">#</th>
                                                 <th  class="td-nama_kegiatan"> Nama Kegiatan</th>
-                                                <th  class="td-foto"> Foto</th>
+                                                <th style="width:1000px;" <?php echo (get_value('orderby')=='foto' ? 'class="sortedby td-foto"' : null); ?>>
+                                                    <?php Html :: get_field_order_link('foto', "Foto"); ?>
+                                                </th>
                                                 <th  class="td-deskripsi_dokumen"> Deskripsi Dokumen</th>
                                                 <th  class="td-link"> Link</th>
                                                 <th  class="td-username"> Diupload Oleh</th>
@@ -188,7 +190,7 @@ $show_pagination = $this->show_pagination;
                                                             <?php echo $data['nama_kegiatan']; ?> 
                                                         </span>
                                                     </td>
-                                                    <td class="td-foto"><?php Html :: page_img($data['foto'],125,125,3); ?></td>
+                                                    <td class="td-foto"><?php Html :: page_img($data['foto'],240,240,100); ?></td>
                                                     <td class="td-deskripsi_dokumen">
                                                         <span <?php if($can_edit){ ?> data-pk="<?php echo $data['id_dokumentasi'] ?>" 
                                                             data-url="<?php print_link("dokumentasi/editfield/" . urlencode($data['id_dokumentasi'])); ?>" 

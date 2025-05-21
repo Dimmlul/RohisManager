@@ -5,9 +5,9 @@ $current_page = $this->set_current_page_link();
 ?>
 <div>
     <div  class="">
-        <div class="">
-            <div class="row ">
-                <div class="col-sm-12 comp-grid">
+        <div class="container-fluid">
+            <div class="row mx-auto">
+                <div class="col-md-12 comp-grid">
                     <div class=""><?php
                         require_once 'config.php'; // <<< WAJIB pakai require_once
                         try {
@@ -27,7 +27,7 @@ $current_page = $this->set_current_page_link();
                         // Execute query untuk mengambil pengumuman
                         $stmt = $pdo->query($query);
                         // HTML untuk menampilkan pengumuman tanpa pagination
-                        echo '<section style="background-color: #ffffff; padding: 50px 0; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">';
+                        echo '<section style="background-color: #ffffff; padding: 50px 0; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);">';
                             echo '  <div style="text-align: center; margin-bottom: 30px;">';
                                 echo '    <h1 style="font-size: 2.5em; margin-bottom: 20px; font-family: Arial, sans-serif;">Informasi Kegiatan Terbaru</h1>';
                                 echo '    <p style="font-size: 1.2em; color: #555; font-family: Arial, sans-serif;">Pengumuman resmi seputar kegiatan Rohis terkini.</p>';
@@ -52,8 +52,7 @@ $current_page = $this->set_current_page_link();
                                     echo '    </div>';
                                 echo '  </div>';
                             echo '</section>';
-                            ?>
-                        </div>
+                        ?></div>
                     </div>
                 </div>
             </div>
