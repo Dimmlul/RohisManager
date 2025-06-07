@@ -9,12 +9,19 @@ Proyek ini adalah sistem manajemen untuk Rohis (Rohani Islam) yang dinamakan "Ro
 ## 📷 Screenshot
 
 ![Rohismanager](../Rohman.png)
+
 ![Home](../Home.png)
+
 ![Pengumuman](../Pengumuman.png)
+
 ![Kegiatan](../Kegiatan.png)
+
 ![Dokumentasi](../Dokumentasi.png)
+
 ![AbsensiKegiatan](../AbsensiKegiatan.png)
+
 ![Kas](../Kas.png)
+
 ![Inventaris](../Inventaris.png)
 
 ---
