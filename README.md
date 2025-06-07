@@ -1,8 +1,8 @@
-# Rohman - RohisManager Project
+# Rohman - RohisManager
 
 ## Deskripsi
 
-Proyek ini adalah sistem manajemen untuk Rohis (Rohani Islam) yang dinamakan "Rohman".
+Proyek ini adalah sistem manajemen untuk ekstrakulikuler Rohis (Rohani Islam) SMKN 46 yang dinamakan "Rohman".
 
 ---
 
@@ -10,17 +10,31 @@ Proyek ini adalah sistem manajemen untuk Rohis (Rohani Islam) yang dinamakan "Ro
 
 ![Rohismanager](img/Rohman.png)
 
+---
+
 ![Home](img/Home.png)
+
+---
 
 ![Pengumuman](img/Pengumuman.png)
 
+---
+
 ![Kegiatan](img/Kegiatan.png)
+
+---
 
 ![Dokumentasi](img/Dokumentasi.png)
 
+---
+
 ![AbsensiKegiatan](img/AbsensiKegiatan.png)
 
+---
+
 ![Kas](img/Kas.png)
+
+---
 
 ![Inventaris](img/Inventaris.png)
 
