@@ -53,10 +53,6 @@ class UserController extends SecureController{
 		else{
 			$db->orderBy("user.id_user", ORDER_TYPE);
 		}
-		$allowed_roles = array ('administrator', 'pengurus', 'user');
-		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
-		$db->where("user.role", get_active_user('role') );
-		}
 		if($fieldname){
 			$db->where($fieldname , $fieldvalue); //filter by a single field name
 		}
@@ -149,10 +145,6 @@ class UserController extends SecureController{
 			"username", 
 			"role", 
 			"jabatan");
-		$allowed_roles = array ('administrator', 'pengurus', 'user');
-		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
-		$db->where("user.role", get_active_user('role') );
-		}
 		if($value){
 			$db->where($rec_id, urldecode($value)); //select record based on field name
 		}
@@ -254,17 +246,17 @@ class UserController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		 //editable fields
-		$fields = $this->fields = array("id_user","username","photo","jabatan");
+		$fields = $this->fields = array("id_user","username","email","photo");
 		if($formdata){
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
 				'username' => 'required',
-				'jabatan' => 'required',
+				'email' => 'required|valid_email',
 			);
 			$this->sanitize_array = array(
 				'username' => 'sanitize_string',
+				'email' => 'sanitize_string',
 				'photo' => 'sanitize_string',
-				'jabatan' => 'sanitize_string',
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			//Check if Duplicate Record Already Exit In The Database
@@ -273,12 +265,15 @@ class UserController extends SecureController{
 				if($db->has($tablename)){
 					$this->view->page_error[] = $modeldata['username']." Already exist!";
 				}
+			}
+			//Check if Duplicate Record Already Exit In The Database
+			if(isset($modeldata['email'])){
+				$db->where("email", $modeldata['email'])->where("id_user", $rec_id, "!=");
+				if($db->has($tablename)){
+					$this->view->page_error[] = $modeldata['email']." Already exist!";
+				}
 			} 
 			if($this->validated()){
-		$allowed_roles = array ('administrator');
-		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
-		$db->where("user.role", get_active_user('role') );
-		}
 				$db->where("user.id_user", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);
 				$numRows = $db->getRowCount(); //number of affected rows. 0 = no record field updated
@@ -301,10 +296,6 @@ class UserController extends SecureController{
 				}
 			}
 		}
-		$allowed_roles = array ('administrator');
-		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
-		$db->where("user.role", get_active_user('role') );
-		}
 		$db->where("user.id_user", $rec_id);;
 		$data = $db->getOne($tablename, $fields);
 		$page_title = $this->view->page_title = "Edit User";
@@ -324,7 +315,7 @@ class UserController extends SecureController{
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("id_user","username","photo","jabatan");
+		$fields = $this->fields = array("id_user","username","email","photo");
 		$page_error = null;
 		if($formdata){
 			$postdata = array();
@@ -334,12 +325,12 @@ class UserController extends SecureController{
 			$postdata = $this->format_request_data($postdata);
 			$this->rules_array = array(
 				'username' => 'required',
-				'jabatan' => 'required',
+				'email' => 'required|valid_email',
 			);
 			$this->sanitize_array = array(
 				'username' => 'sanitize_string',
+				'email' => 'sanitize_string',
 				'photo' => 'sanitize_string',
-				'jabatan' => 'sanitize_string',
 			);
 			$this->filter_rules = true; //filter validation rules by excluding fields not in the formdata
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
@@ -349,12 +340,15 @@ class UserController extends SecureController{
 				if($db->has($tablename)){
 					$this->view->page_error[] = $modeldata['username']." Already exist!";
 				}
+			}
+			//Check if Duplicate Record Already Exit In The Database
+			if(isset($modeldata['email'])){
+				$db->where("email", $modeldata['email'])->where("id_user", $rec_id, "!=");
+				if($db->has($tablename)){
+					$this->view->page_error[] = $modeldata['email']." Already exist!";
+				}
 			} 
 			if($this->validated()){
-		$allowed_roles = array ('administrator');
-		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
-		$db->where("user.role", get_active_user('role') );
-		}
 				$db->where("user.id_user", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);
 				$numRows = $db->getRowCount();
@@ -397,10 +391,6 @@ class UserController extends SecureController{
 		//form multiple delete, split record id separated by comma into array
 		$arr_rec_id = array_map('trim', explode(",", $rec_id));
 		$db->where("user.id_user", $arr_rec_id, "in");
-		$allowed_roles = array ('administrator');
-		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
-		$db->where("user.role", get_active_user('role') );
-		}
 		$bool = $db->delete($tablename);
 		if($bool){
 			$this->write_to_log("delete", "true");

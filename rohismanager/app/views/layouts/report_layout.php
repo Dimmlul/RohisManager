@@ -33,8 +33,8 @@
 
 		#report-header {
 			position: relative;
-			border-top: 2px solid #0066cc;
-			border-bottom: 5px solid #0066cc;
+			border-top: 2px solid #072247;
+			border-bottom: 5px solid #072247;
 			background: #fafafa;
 			padding: 10px;
 		}
@@ -258,16 +258,16 @@
 				</th>
 				<th align="left" valign="middle">
 					<h3 class="company-name"><?php echo SITE_NAME; ?></h3>
-					<small class="sub-title">The Amazing and Awesome</small>
+					<small class="sub-title">ROBA'ATTAH</small>
 				</th>
-				<th align="right" valign="middle">
-					<div class="company-info">
-						<div>Phone: <span class="sub-title">+2335400000000</span></div>
-						<div>Email: <span class="sub-title">info@<?php echo SITE_NAME ?></span></div>
-						<div>Web: <span class="sub-title"><?php echo SITE_ADDR ?></span></div>
-					</div>
+				<!--<th align="right" valign="middle">-->
+				<!--	<div class="company-info">-->
+				<!--		<div>Phone: <span class="sub-title">+2335400000000</span></div>-->
+				<!--		<div>Email: <span class="sub-title">info@<?php echo SITE_NAME ?></span></div>-->
+				<!--		<div>Web: <span class="sub-title"><?php echo SITE_ADDR ?></span></div>-->
+				<!--	</div>-->
 					
-				</th>
+				<!--</th>-->
 			</tr>
 		</table>
 	</div>

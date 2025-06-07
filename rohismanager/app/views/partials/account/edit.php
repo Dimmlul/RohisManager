@@ -50,63 +50,46 @@ $redirect_to = $this->redirect_to;
                                     <div class="form-group ">
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <label class="control-label" for="photo">Photo </label>
+                                                <label class="control-label" for="email">Email <span class="text-danger">*</span></label>
                                             </div>
                                             <div class="col-sm-8">
                                                 <div class="">
-                                                    <div class="dropzone " input="#ctrl-photo" fieldname="photo"    data-multiple="false" dropmsg="Choose files or drag and drop files to upload"    btntext="Browse" extensions=".jpg,.png,.gif,.jpeg" filesize="3" maximum="1">
-                                                        <input name="photo" id="ctrl-photo" class="dropzone-input form-control" value="<?php  echo $data['photo']; ?>" type="text"  />
-                                                            <!--<div class="invalid-feedback animated bounceIn text-center">Please a choose file</div>-->
-                                                            <div class="dz-file-limit animated bounceIn text-center text-danger"></div>
-                                                        </div>
+                                                    <input id="ctrl-email"  value="<?php  echo $data['email']; ?>" type="email" placeholder="Enter Email"  required="" name="email"  data-url="api/json/account_email_value_exist/" data-loading-msg="Checking availability ..." data-available-msg="Available" data-unavailable-msg="Not available" class="form-control  ctrl-check-duplicate" />
+                                                        <div class="check-status"></div> 
                                                     </div>
-                                                    <?php Html :: uploaded_files_list($data['photo'], '#ctrl-photo'); ?>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group ">
                                             <div class="row">
                                                 <div class="col-sm-4">
-                                                    <label class="control-label" for="jabatan">Jabatan <span class="text-danger">*</span></label>
+                                                    <label class="control-label" for="photo">Photo </label>
                                                 </div>
                                                 <div class="col-sm-8">
                                                     <div class="">
-                                                        <select required=""  id="ctrl-jabatan" name="jabatan"  placeholder="Select a value ..."    class="custom-select" >
-                                                            <option value="">Select a value ...</option>
-                                                            <?php
-                                                            $rec = $data['jabatan'];
-                                                            $jabatan_options = $comp_model -> user_jabatan_option_list();
-                                                            if(!empty($jabatan_options)){
-                                                            foreach($jabatan_options as $option){
-                                                            $value = (!empty($option['value']) ? $option['value'] : null);
-                                                            $label = (!empty($option['label']) ? $option['label'] : $value);
-                                                            $selected = ( $value == $rec ? 'selected' : null );
-                                                            ?>
-                                                            <option 
-                                                                <?php echo $selected; ?> value="<?php echo $value; ?>"><?php echo $label; ?>
-                                                            </option>
-                                                            <?php
-                                                            }
-                                                            }
-                                                            ?>
-                                                        </select>
+                                                        <div class="dropzone " input="#ctrl-photo" fieldname="photo"    data-multiple="false" dropmsg="Choose files or drag and drop files to upload"    btntext="Browse" extensions=".jpg,.png,.gif,.jpeg" filesize="3" maximum="1">
+                                                            <input name="photo" id="ctrl-photo" class="dropzone-input form-control" value="<?php  echo $data['photo']; ?>" type="text"  />
+                                                                <!--<div class="invalid-feedback animated bounceIn text-center">Please a choose file</div>-->
+                                                                <div class="dz-file-limit animated bounceIn text-center text-danger"></div>
+                                                            </div>
+                                                        </div>
+                                                        <?php Html :: uploaded_files_list($data['photo'], '#ctrl-photo'); ?>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-ajax-status"></div>
-                                    <div class="form-group text-center">
-                                        <button class="btn btn-primary" type="submit">
-                                            Update
-                                            <i class="fa fa-send"></i>
-                                        </button>
-                                    </div>
-                                </form>
+                                        <div class="form-ajax-status"></div>
+                                        <div class="form-group text-center">
+                                            <button class="btn btn-primary" type="submit">
+                                                Update
+                                                <i class="fa fa-send"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-        
+            </section>
+            

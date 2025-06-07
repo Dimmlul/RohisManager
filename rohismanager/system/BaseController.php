@@ -183,7 +183,7 @@ class BaseController{
 
 		$this->file_upload_settings['foto'] = array(
 			"title" => "{{file_name}}",
-			"extensions" => ".jpg,.png,.gif,.jpeg,.zip,.rar,.mp4,.mov,.pdf",
+			"extensions" => ".jpg,.png,.gif,.jpeg",
 			"limit" => "500",
 			"filesize" => "10240",
 			"returnfullpath" => false,

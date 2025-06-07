@@ -30,7 +30,7 @@
                                 <span>Hi <?php echo ucwords(USER_NAME); ?> !</span>
                             </a>
                             <ul class="dropdown-menu">
-                                <a class="dropdown-item" href="<?php print_link('account') ?>"><i class="fa fa-user"></i> My Account</a>
+                                <a class="dropdown-item" href="<?php print_link('account') ?>"><i class="fa fa-user"></i> Akun Saya</a>
                                 <a class="dropdown-item" href="<?php print_link('index/logout?csrf_token=' . Csrf::$token) ?>"><i class="fa fa-sign-out"></i> Logout</a>
                             </ul>
                         </li>

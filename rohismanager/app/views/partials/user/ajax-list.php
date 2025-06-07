@@ -50,22 +50,7 @@ $counter++;
         </td>
         <td class="td-photo"><?php Html :: page_img($data['photo'],50,50,1); ?></td>
         <td class="td-role"> <?php echo $data['role']; ?></td>
-        <td class="td-jabatan">
-            <span <?php if($can_edit){ ?> data-source='<?php print_link('api/json/user_jabatan_option_list'); ?>' 
-                data-value="<?php echo $data['jabatan']; ?>" 
-                data-pk="<?php echo $data['id_user'] ?>" 
-                data-url="<?php print_link("user/editfield/" . urlencode($data['id_user'])); ?>" 
-                data-name="jabatan" 
-                data-title="Select a value ..." 
-                data-placement="left" 
-                data-toggle="click" 
-                data-type="select" 
-                data-mode="popover" 
-                data-showbuttons="left" 
-                class="is-editable" <?php } ?>>
-                <?php echo $data['jabatan']; ?> 
-            </span>
-        </td>
+        <td class="td-jabatan"> <?php echo $data['jabatan']; ?></td>
         <th class="td-btn">
             <?php if($can_view){ ?>
             <a class="btn btn-sm btn-success has-tooltip page-modal" title="View Record" href="<?php print_link("user/view/$rec_id"); ?>">

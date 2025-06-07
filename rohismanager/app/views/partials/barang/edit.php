@@ -41,8 +41,7 @@ $redirect_to = $this->redirect_to;
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                <input id="ctrl-nama_barang"  value="<?php  echo $data['nama_barang']; ?>" type="text" placeholder="Enter Nama Barang"  required="" name="nama_barang"  data-url="api/json/barang_nama_barang_value_exist/" data-loading-msg="Checking availability ..." data-available-msg="Available" data-unavailable-msg="Not available" class="form-control  ctrl-check-duplicate" />
-                                                    <div class="check-status"></div> 
+                                                <input id="ctrl-nama_barang"  value="<?php  echo $data['nama_barang']; ?>" type="text" placeholder="Enter Nama Barang"  required="" name="nama_barang"  class="form-control " />
                                                 </div>
                                             </div>
                                         </div>

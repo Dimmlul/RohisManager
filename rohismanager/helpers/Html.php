@@ -370,7 +370,7 @@ class Html
 			<i class="fa fa-file"></i> <?php echo $button_text; ?>
 		</button>
 
-		<form method="post" action="<?php print_link($form_path) ?>" enctype="multipart/form-data" id="-import-data" class="modal fade" role="dialog" tabindex="-1" data-backdrop="false" role="dialog" aria-labelledby="myModalLabel">
+<form method="post" action="<?php print_link($form_path) ?>?csrf_token=<?php echo Csrf :: $token; ?>" enctype="multipart/form-data" id="-import-data" class="modal fade" role="dialog" tabindex="-1" data-backdrop="false" role="dialog" aria-labelledby="myModalLabel">
 			<div class="modal-dialog modal-dialog-centered modal-sm">
 				<div class="modal-content">
 					<div class="modal-header">

@@ -44,13 +44,13 @@
 						<a class="nav-link" href="<?php print_link(HOME_PAGE) ?>">Home</a>
 					</li>
 					<li class="nav-item active">
-						<a class="nav-link" href="<?php print_link('info/about') ?>">About us</a>
+						<a class="nav-link" href="<?php print_link('info/about') ?>">Tentang Kami</a>
 					</li>
+					<!--<li class="nav-item active">-->
+					<!--	<a class="nav-link" href="<?php print_link('info/help') ?>">Help and FAQ</a>-->
+					<!--</li>-->
 					<li class="nav-item active">
-						<a class="nav-link" href="<?php print_link('info/help') ?>">Help and FAQ</a>
-					</li>
-					<li class="nav-item active">
-						<a class="nav-link" href="<?php print_link('info/contact') ?>">Contact us</a>
+						<a class="nav-link" href="<?php print_link('info/contact') ?>">Kontak Kami</a>
 					</li>
 				</ul>
 			</div>

@@ -53,9 +53,9 @@ class Absensi_kegiatanController extends SecureController{
 		else{
 			$db->orderBy("absensi_kegiatan.id_absensi", ORDER_TYPE);
 		}
-		$allowed_roles = array ('administrator', 'pengurus', 'user');
+		$allowed_roles = array ('administrator', 'pengurus');
 		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
-		$db->where("absensi_kegiatan.username", get_active_user('username') );
+		$db->where("absensi_kegiatan.username", get_active_user('role') );
 		}
 		if($fieldname){
 			$db->where($fieldname , $fieldvalue); //filter by a single field name
@@ -150,9 +150,9 @@ class Absensi_kegiatanController extends SecureController{
 			"waktu_absen", 
 			"deskripsi", 
 			"status");
-		$allowed_roles = array ('administrator', 'pengurus', 'user');
+		$allowed_roles = array ('administrator', 'pengurus');
 		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
-		$db->where("absensi_kegiatan.username", get_active_user('username') );
+		$db->where("absensi_kegiatan.username", get_active_user('role') );
 		}
 		if($value){
 			$db->where($rec_id, urldecode($value)); //select record based on field name
@@ -251,7 +251,7 @@ class Absensi_kegiatanController extends SecureController{
 			if($this->validated()){
 		$allowed_roles = array ('administrator', 'pengurus');
 		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
-		$db->where("absensi_kegiatan.username", get_active_user('username') );
+		$db->where("absensi_kegiatan.username", get_active_user('role') );
 		}
 				$db->where("absensi_kegiatan.id_absensi", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);
@@ -277,7 +277,7 @@ class Absensi_kegiatanController extends SecureController{
 		}
 		$allowed_roles = array ('administrator', 'pengurus');
 		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
-		$db->where("absensi_kegiatan.username", get_active_user('username') );
+		$db->where("absensi_kegiatan.username", get_active_user('role') );
 		}
 		$db->where("absensi_kegiatan.id_absensi", $rec_id);;
 		$data = $db->getOne($tablename, $fields);
@@ -322,7 +322,7 @@ class Absensi_kegiatanController extends SecureController{
 			if($this->validated()){
 		$allowed_roles = array ('administrator', 'pengurus');
 		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
-		$db->where("absensi_kegiatan.username", get_active_user('username') );
+		$db->where("absensi_kegiatan.username", get_active_user('role') );
 		}
 				$db->where("absensi_kegiatan.id_absensi", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);
@@ -368,7 +368,7 @@ class Absensi_kegiatanController extends SecureController{
 		$db->where("absensi_kegiatan.id_absensi", $arr_rec_id, "in");
 		$allowed_roles = array ('administrator', 'pengurus');
 		if(!in_array(strtolower(USER_ROLE), $allowed_roles)){
-		$db->where("absensi_kegiatan.username", get_active_user('username') );
+		$db->where("absensi_kegiatan.username", get_active_user('role') );
 		}
 		$bool = $db->delete($tablename);
 		if($bool){

@@ -76,22 +76,7 @@ $show_export_btn = $this->show_export_btn;
                                     </tr>
                                     <tr  class="td-jabatan">
                                         <th class="title"> Jabatan: </th>
-                                        <td class="value">
-                                            <span <?php if($can_edit){ ?> data-source='<?php print_link('api/json/user_jabatan_option_list'); ?>' 
-                                                data-value="<?php echo $data['jabatan']; ?>" 
-                                                data-pk="<?php echo $data['id_user'] ?>" 
-                                                data-url="<?php print_link("user/editfield/" . urlencode($data['id_user'])); ?>" 
-                                                data-name="jabatan" 
-                                                data-title="Select a value ..." 
-                                                data-placement="left" 
-                                                data-toggle="click" 
-                                                data-type="select" 
-                                                data-mode="popover" 
-                                                data-showbuttons="left" 
-                                                class="is-editable" <?php } ?>>
-                                                <?php echo $data['jabatan']; ?> 
-                                            </span>
-                                        </td>
+                                        <td class="value"> <?php echo $data['jabatan']; ?></td>
                                     </tr>
                                 </tbody>
                                 <!-- Table Body End -->

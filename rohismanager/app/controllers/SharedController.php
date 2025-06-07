@@ -54,18 +54,6 @@ class SharedController extends BaseController{
 	}
 
 	/**
-     * user_jabatan_option_list Model Action
-     * @return array
-     */
-	function user_jabatan_option_list(){
-		$db = $this->GetModel();
-		$sqltext = "SELECT  DISTINCT nama_jabatan AS value,nama_jabatan AS label FROM jabatan ORDER BY id_jabatan";
-		$queryparams = null;
-		$arr = $db->rawQuery($sqltext, $queryparams);
-		return $arr;
-	}
-
-	/**
      * user_username_value_exist Model Action
      * @return array
      */
@@ -88,6 +76,18 @@ class SharedController extends BaseController{
 	}
 
 	/**
+     * user_jabatan_option_list Model Action
+     * @return array
+     */
+	function user_jabatan_option_list(){
+		$db = $this->GetModel();
+		$sqltext = "SELECT  DISTINCT nama_jabatan AS value,nama_jabatan AS label FROM jabatan ORDER BY id_jabatan";
+		$queryparams = null;
+		$arr = $db->rawQuery($sqltext, $queryparams);
+		return $arr;
+	}
+
+	/**
      * dokumentasi_nama_kegiatan_option_list Model Action
      * @return array
      */
@@ -107,17 +107,6 @@ class SharedController extends BaseController{
 		$db = $this->GetModel();
 		$db->where("nama_kegiatan", $val);
 		$exist = $db->has("dokumentasi");
-		return $exist;
-	}
-
-	/**
-     * barang_nama_barang_value_exist Model Action
-     * @return array
-     */
-	function barang_nama_barang_value_exist($val){
-		$db = $this->GetModel();
-		$db->where("nama_barang", $val);
-		$exist = $db->has("barang");
 		return $exist;
 	}
 

@@ -136,8 +136,8 @@ class Menu{
 			"label" => "Latihan", 
 		),
 		array(
-			"value" => "Meeting", 
-			"label" => "Meeting", 
+			"value" => "Kegiatan", 
+			"label" => "Kegiatan", 
 		),
 		array(
 			"value" => "Acara", 
@@ -154,13 +154,27 @@ class Menu{
 		array(
 			"value" => "Bakti Sosial", 
 			"label" => "Bakti Sosial", 
+		),);
+		
+			public static $account_status = array(
+		array(
+			"value" => "Active", 
+			"label" => "Active", 
 		),
 		array(
-			"value" => "Pengajian Umum", 
-			"label" => "Pengajian Umum", 
+			"value" => "Pending", 
+			"label" => "Pending", 
+		),
+		array(
+			"value" => "Blocked", 
+			"label" => "Blocked", 
 		),);
 		
 			public static $role = array(
+		array(
+			"value" => "Administrator", 
+			"label" => "Administrator", 
+		),
 		array(
 			"value" => "Pengurus", 
 			"label" => "Pengurus", 
@@ -168,12 +182,6 @@ class Menu{
 		array(
 			"value" => "User", 
 			"label" => "User", 
-		),);
-		
-			public static $account_status = array(
-		array(
-			"value" => "Active", 
-			"label" => "Active", 
 		),);
 		
 }
